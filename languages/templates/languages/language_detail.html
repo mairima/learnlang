@@ -1,0 +1,7 @@
+{% extends 'languages/base.html' %}
+{% block content %}
+<h2>{{ language.get_name_display }}</h2>
+<p><strong>Description:</strong> {{ language.description }}</p>
+<p><strong>Difficulty:</strong> {{ language.difficulty }}</p>
+<a href="/">Back</a>
+{% endblock %}
