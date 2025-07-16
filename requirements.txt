@@ -1,2 +1,6 @@
 Django>=4.2
 python-dotenv
+gunicorn
+whitenoise
+django-heroku
+psycopg2-binary
