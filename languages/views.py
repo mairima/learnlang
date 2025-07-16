@@ -2,16 +2,25 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Language
 from .forms import LanguageForm
 # Import necessary modules for authentication
+from django import forms
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.core.mail import send_mail
-send_mail('Welcome!', 'Thanks for joining.', 'your_email@gmail.com', [user.email])
 
 # Import the User model if needed
 def signup(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
+            send_mail('Welcome!', 
+                      'Thanks for joining.', 
+                      'your_email@gmail.com', 
+                      [user.email],
+                      fail_silently=True
+                      )
+            
             return redirect('login')
     else:
         form = UserCreationForm()
@@ -46,3 +55,10 @@ def language_delete(request, pk):
         language.delete()
         return redirect('language_list')
     return render(request, 'languages/language_confirm_delete.html', {'language': language})
+# Login and Logout views
+class CustomUserCreationForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+
+    class Meta:
+        model = User
+        fields = ("username", "email", "password1", "password2")
