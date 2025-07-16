@@ -15,6 +15,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 if os.path.exists('env.py'):
     import env
+# Apply Whitenoise for static files in production    
+import django_heroku
+MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+django_heroku.settings(locals())
    
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY", 'django-insecure-x6u!)twc_=)thsl#a)rei&v6msvvk-n*uk!&%(rr@-^)p675yc')
