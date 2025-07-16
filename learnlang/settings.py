@@ -23,7 +23,11 @@ SECRET_KEY = os.getenv("SECRET_KEY", 'django-insecure-x6u!)twc_=)thsl#a)rei&v6ms
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "True") == "True"
 
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",") if os.getenv("ALLOWED_HOSTS") else []
+# Read the environment variable (default to empty string if not set)
+hosts_env = os.getenv("ALLOWED_HOSTS", "")
+
+# Split on commas, strip whitespace, and filter out empty strings
+ALLOWED_HOSTS = [h.strip() for h in hosts_env.split(",") if h.strip()]
 
 # Application definition
 INSTALLED_APPS = [
