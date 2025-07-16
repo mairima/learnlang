@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import home
+from . import views
 
 urlpatterns = [
     path('', views.language_list, name='language_list'),
@@ -7,8 +7,6 @@ urlpatterns = [
     path('<int:pk>/', views.language_detail, name='language_detail'),
     path('<int:pk>/edit/', views.language_update, name='language_update'),
     path('<int:pk>/delete/', views.language_delete, name='language_delete'),
-    # Authentication URLs
-    path('accounts/signup/', signup, name='signup'),
-    # Home URL
-    path('', home, name='home'),
+    path('accounts/signup/', views.signup, name='signup'),
+    path('home/', views.home, name='home'),
 ]
