@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
 
     # Your custom app
     'languages',
@@ -104,7 +105,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Authentication settings (login/signup)
-INSTALLED_APPS += ['django.contrib.sites']
+LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 SITE_ID = 1
