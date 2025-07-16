@@ -55,6 +55,11 @@ def language_delete(request, pk):
         language.delete()
         return redirect('language_list')
     return render(request, 'languages/language_confirm_delete.html', {'language': language})
+# Home view
+def home(request):
+    if request.method == 'GET':
+        return render(request, 'home.html')
+
 # Login and Logout views
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)
