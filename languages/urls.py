@@ -7,4 +7,6 @@ urlpatterns = [
     path('<int:pk>/', views.language_detail, name='language_detail'),
     path('<int:pk>/edit/', views.language_update, name='language_update'),
     path('<int:pk>/delete/', views.language_delete, name='language_delete'),
+    # Authentication URLs
+    path('accounts/signup/', signup, name='signup'),
 ]
