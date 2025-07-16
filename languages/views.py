@@ -1,6 +1,18 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Language
 from .forms import LanguageForm
+# Import necessary modules for authentication
+from django.contrib.auth.forms import UserCreationForm
+# Import the User model if needed
+def signup(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login')
+    else:
+        form = UserCreationForm()
+    return render(request, 'registration/signup.html', {'form': form})
 
 def language_list(request):
     languages = Language.objects.all()
