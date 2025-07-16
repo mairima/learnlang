@@ -3,6 +3,9 @@ from .models import Language
 from .forms import LanguageForm
 # Import necessary modules for authentication
 from django.contrib.auth.forms import UserCreationForm
+from django.core.mail import send_mail
+send_mail('Welcome!', 'Thanks for joining.', 'your_email@gmail.com', [user.email])
+
 # Import the User model if needed
 def signup(request):
     if request.method == 'POST':

@@ -17,7 +17,10 @@ class Language(models.Model):
         return self.get_name_display()
     #CRUD for lessons per language
     # This model can be extended with more fields as needed, such as 'created_at', 'updated_at', etc.
-    class Lesson(models.Model):
+class Lesson(models.Model):
     language = models.ForeignKey(Language, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     content = models.TextField()
+        
+    def __str__(self):
+        return self.title
