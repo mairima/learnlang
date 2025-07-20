@@ -8,13 +8,14 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-# Load .env if present
+# Load .env file if present
 load_dotenv()
 
+# Base directory of the project
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Optional: load env.py if it exists
-if os.path.exists('env.py'):
+# Optional: Load Python-style env file if exists
+if os.path.exists(os.path.join(BASE_DIR, 'env.py')):
     import env
 
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -23,11 +24,8 @@ SECRET_KEY = os.getenv("SECRET_KEY", 'django-insecure-x6u!)twc_=)thsl#a)rei&v6ms
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "True") == "True"
 
-# Read the environment variable (default to empty string if not set)
-hosts_env = os.getenv("ALLOWED_HOSTS", "")
-
-# Split on commas, strip whitespace, and filter out empty strings
-ALLOWED_HOSTS = [h.strip() for h in hosts_env.split(",") if h.strip()]
+# Allowed hosts from environment variable (split by comma)
+ALLOWED_HOSTS = [h.strip() for h in os.getenv("ALLOWED_HOSTS", "").split(",") if h.strip()]
 
 # Application definition
 INSTALLED_APPS = [
@@ -37,13 +35,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.sites',
-    'languages',  # Your custom app
+    'django.contrib.sites',     # Required for allauth or site-based logic
+    'languages',                # Your app
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Serve static files in production
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -57,7 +55,7 @@ ROOT_URLCONF = 'learnlang.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'languages', 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'languages', 'templates')],  # custom template directory
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -72,7 +70,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'learnlang.wsgi.application'
 
-# Database
+# Database (SQLite for development)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -94,12 +92,12 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static files
+# Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# Default primary key field type
+# Default auto field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Authentication settings
@@ -108,14 +106,14 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 SITE_ID = 1
 
-# Email settings
+# Email configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'your_email@gmail.com'
-EMAIL_HOST_PASSWORD = 'your_app_password'
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'your_email@gmail.com')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'your_app_password')
 
-# Heroku deployment
+# Heroku deployment settings
 import django_heroku
 django_heroku.settings(locals())
