@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contact Us – LearnLang{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="row">
+    <!-- Left: Contact Info -->
+    <div class="col-md-5 mb-4">
+      <h2>Contact Information</h2>
+      <p><strong>Email:</strong> support@learnlang.com</p>
+      <p><strong>Phone:</strong> +49 30 12345678</p>
+      <p><strong>Business Hours (Germany):</strong><br>
+        Monday – Friday: 9:00 AM – 5:00 PM<br>
+        Saturday – Sunday: On demand
+      </p>
+
+      <div class="mt-4">
+        <a href="{% url 'booking' %}" class="btn btn-success">Book Now</a>
+      </div>
+    </div>
+
+    <!-- Right: Contact Form -->
+    <div class="col-md-7">
+      <h2>Send Us a Message</h2>
+      <form method="post" action="">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="name" class="form-label">Your Name</label>
+          <input type="text" class="form-control" id="name" name="name" required>
+        </div>
+        <div class="mb-3">
+          <label for="email" class="form-label">Your Email</label>
+          <input type="email" class="form-control" id="email" name="email" required>
+        </div>
+        <div class="mb-3">
+          <label for="message" class="form-label">Your Message</label>
+          <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Send Message</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

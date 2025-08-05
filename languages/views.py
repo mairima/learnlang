@@ -77,3 +77,5 @@ def get_tutor(request):
 
 def book_tutor(request):
     return render(request, 'booking.html')
+def contact_us(request):
+    return render(request, 'contact_us.html')
