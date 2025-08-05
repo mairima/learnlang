@@ -72,3 +72,8 @@ def home(request):
 # English view
 def english(request):
     return render(request, 'english.html')
+def get_tutor(request):
+    return render(request, 'tutor.html')
+
+def book_tutor(request):
+    return render(request, 'booking.html')

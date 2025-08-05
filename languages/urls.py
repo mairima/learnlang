@@ -6,6 +6,8 @@ urlpatterns = [
     path('languages/', views.language_list, name='language_list'),  # ✅ /languages/
 
     path('english/', views.english, name='english'),  # ✅ /english/
+    path('get-tutor/', views.get_tutor, name='tutor'),
+path('book/', views.book_tutor, name='booking'),
 
     # Language CRUD
     path('languages/create/', views.language_create, name='language_create'),
