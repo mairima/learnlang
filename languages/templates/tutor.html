@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Get a Tutor – LearnLang{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="row align-items-center">
+    <!-- Left side: Tutor Image -->
+    <div class="col-md-6">
+      <img src="https://cdn.pixabay.com/photo/2016/03/31/20/52/tutor-1293832_1280.png" alt="Tutor Image" class="img-fluid rounded shadow">
+    </div>
+
+    <!-- Right side: Text + Book Button -->
+    <div class="col-md-6">
+      <h2>One-on-One Tutoring</h2>
+      <p>Connect with expert English tutors to help guide your learning journey. Whether you're a beginner or preparing for exams, our tutors will personalize sessions to fit your goals and schedule.</p>
+      <a href="{% url 'book_tutor' %}" class="btn btn-primary mt-3">Book a Tutor Session</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

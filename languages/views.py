@@ -69,3 +69,6 @@ def language_delete(request, pk):
 # Home view
 def home(request):
     return render(request, 'home.html')
+# English view
+def english(request):
+    return render(request, 'english.html')

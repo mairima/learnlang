@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}LearnLang – English{% endblock %}
+
+{% block content %}
+<header>
+  <h1>Welcome to LearnLang: Master English from A1 to C2</h1>
+  <nav class="navigation">
+    <ul>
+      <li><a href="#alphabet">Alphabet</a></li>
+      <li><a href="#numbers">Numbers</a></li>
+      <li><a href="#grammar">Grammar</a></li>
+      <li><a href="#lessons">Lessons</a></li>
+    </ul>
+  </nav>
+</header>
+
+<section id="alphabet">
+  <h2>Learn the English Alphabet</h2>
+  <p>The English alphabet consists of 26 letters from A to Z.</p>
+  <div class="alphabet">
+    <p>A B C D E F G H I J K L M N O P Q R S T U V W X Y Z</p>
+  </div>
+</section>
+
+<section id="numbers">
+  <h2>Learn Numbers in English</h2>
+  <p>Start with basic numbers and build up to larger figures.</p>
+  <ul>
+    <li>1 – One</li>
+    <li>2 – Two</li>
+    <li>3 – Three</li>
+    <li>10 – Ten</li>
+    <li>20 – Twenty</li>
+    <li>100 – One Hundred</li>
+    <li>1,000 – One Thousand</li>
+  </ul>
+</section>
+
+<section id="grammar">
+  <h2>Grammar Structure</h2>
+  <ul>
+    <li><strong>Parts of Speech:</strong> Nouns, Pronouns, Verbs, Adjectives, Adverbs, Prepositions, Conjunctions, Interjections</li>
+    <li><strong>Tenses:</strong> Present Simple, Past Simple, Present Continuous, Future Simple, etc.</li>
+    <li><strong>Sentence Structure:</strong> Subject + Verb + Object</li>
+    <li><strong>Questions:</strong> Use auxiliary verbs like Do/Does/Did</li>
+    <li><strong>Negation:</strong> Use not (e.g., I do not like coffee.)</li>
+  </ul>
+</section>
+
+<section id="lessons">
+  <h2>English Lessons from Beginner to Advanced</h2>
+  <h3>Beginner (A1–A2)</h3>
+  <ul>
+    <li>Introducing yourself</li>
+    <li>Daily routines</li>
+    <li>Food and drinks</li>
+    <li>Family and friends</li>
+  </ul>
+
+  <h3>Intermediate (B1–B2)</h3>
+  <ul>
+    <li>Making appointments</li>
+    <li>Travel and directions</li>
+    <li>Expressing opinions</li>
+    <li>Job interviews and workplace English</li>
+  </ul>
+
+  <h3>Advanced (C1–C2)</h3>
+  <ul>
+    <li>Debating and presenting arguments</li>
+    <li>Academic writing and essays</li>
+    <li>Business English and formal correspondence</li>
+    <li>Understanding idioms and phrasal verbs</li>
+  </ul>
+</section>
+{% endblock %}

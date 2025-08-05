@@ -16,12 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from languages.views import signup, home
+from languages import views  # ✅ Add this line
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', home, name='home'),  # Homepage view
-    path('accounts/signup/', signup, name='signup'),  # Custom signup view
-    path('accounts/', include('django.contrib.auth.urls')),  # Built-in login, logout, password views
-    path('', include('languages.urls')),  # Your app's URLs (like lessons, quizzes etc.)
+    path("admin/", admin.site.urls),
+    path("accounts/signup/", views.signup, name="signup"),  # ✅ Now this works
+    path("accounts/", include("django.contrib.auth.urls")),
+    path("languages/", include("languages.urls")),
+    path("", views.home, name="home"),  # ✅ Use home view as landing page
 ]
