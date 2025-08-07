@@ -120,3 +120,9 @@ django_heroku.settings(locals())
 
 # Message storage settings
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
+# Database configuration (Override DB with environment variable)
+import dj_database_url
+
+DATABASES = {
+    'default': dj_database_url.config(conn_max_age=600, ssl_require=True)
+}
