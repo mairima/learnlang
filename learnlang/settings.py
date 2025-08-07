@@ -55,7 +55,6 @@ ROOT_URLCONF = 'learnlang.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'languages', 'templates')],  # custom template directory
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

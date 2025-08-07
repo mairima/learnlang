@@ -6,9 +6,6 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.core.mail import send_mail
 
-from .models import Language
-from .forms import LanguageForm
-
 # --- New Signup View ---
 def signup(request):
     if request.method == 'POST':
@@ -25,6 +22,9 @@ def home(request):
     return render(request, 'home.html')
 # English view
 def english(request):
+    return render(request, 'english.html')
+# english view2
+def english_view(request):
     return render(request, 'english.html')
 def get_tutor(request):
     return render(request, 'tutor.html')

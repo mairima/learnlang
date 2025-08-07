@@ -21,13 +21,8 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle {% if request.path == '/english/' %}active{% endif %}" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Language
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item" href="{% url 'english' %}">Start Learning English →</a></li>
-            </ul>
+          <li class="nav-item">
+          <a class="nav-link {% if request.path == '/english/' %}active{% endif %}" href="{% url 'english' %}">English Courses</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{% url 'tutor' %}">Get a Tutor</a>
