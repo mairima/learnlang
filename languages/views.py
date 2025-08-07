@@ -21,9 +21,6 @@ def signup(request):
 def home(request):
     return render(request, 'home.html')
 # English view
-def english(request):
-    return render(request, 'english.html')
-# english view2
 def english_view(request):
     return render(request, 'english.html')
 def get_tutor(request):
