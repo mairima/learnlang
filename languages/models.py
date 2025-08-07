@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
+import datetime
 
-# CRUD for lessons-future feature
+# Crud for lessons
 class Lesson(models.Model):
     title = models.CharField(max_length=100)
     content = models.TextField()
@@ -12,7 +13,7 @@ class Lesson(models.Model):
     def __str__(self):
         return self.title
 
-# CRUD for exercises linked to a lesson-future feature
+# Crud for exercises linked to a lesson
 class Exercise(models.Model):
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
     question = models.TextField()
@@ -22,19 +23,20 @@ class Exercise(models.Model):
     option_3 = models.CharField(max_length=255)
     explanation = models.TextField(blank=True)
 
-# CRUD for courses (used in bookings)
 class Course(models.Model):
     name = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
 
-# CRUD for user bookings
 class Booking(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100, default="Guest")
+    email = models.EmailField(blank=True, null=True)
     date = models.DateField()
-    notes = models.TextField(blank=True, null=True)
+    time = models.TimeField(default=datetime.time(12, 0))  # Default: 12:00 PM
+    message = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return f"{self.user.username} - {self.course.name}"
+        return f"{self.user.username} - {self.course.name} on {self.date} at {self.time}"

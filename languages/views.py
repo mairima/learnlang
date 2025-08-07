@@ -69,25 +69,23 @@ def delete_booking_view(request, booking_id):
     return render(request, 'delete_booking.html', {'booking': booking})
 
 # Message for booking confirmation
+@login_required
 def book_tutor(request):
     if request.method == 'POST':
-        name = request.POST.get('name')
-        email = request.POST.get('email')
-        date = request.POST.get('date')
-        time = request.POST.get('time')
-        message = request.POST.get('message')
+        course_id = request.POST.get('course')
+        course = Course.objects.get(id=course_id)
 
-        # Save the booking (adjust model name/fields as needed)
         Booking.objects.create(
-            name=name,
-            email=email,
-            date=date,
-            time=time,
-            message=message,
-            user=request.user  # if your Booking model has a user ForeignKey
+            user=request.user,
+            course=course,
+            name=request.POST['name'],
+            email=request.POST.get('email'),
+            date=request.POST['date'],
+            time=request.POST['time'],
+            message=request.POST.get('message'),
         )
+        messages.success(request, '🎉 Booking submitted successfully!')
+        return redirect('my_bookings')  # or stay on same page if needed
 
-        messages.success(request, 'Booking submitted successfully!')
-        return redirect('my_bookings')  # or redirect to another page
-
-    return render(request, 'booking_form.html')
+    courses = Course.objects.all()
+    return render(request, 'booking.html', {'courses': courses})

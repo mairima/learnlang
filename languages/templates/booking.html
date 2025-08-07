@@ -7,8 +7,25 @@
 <section class="container mt-5">
   <h2 class="text-center mb-4">Book a Tutor Session</h2>
 
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+
   <form method="post" action="">
     {% csrf_token %}
+
+    <div class="mb-3">
+      <label for="course" class="form-label">Select a Course</label>
+      <select class="form-control" id="course" name="course" required>
+        <option value="">-- Choose a course --</option>
+        {% for course in courses %}
+          <option value="{{ course.id }}">{{ course.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
     <div class="mb-3">
       <label for="name" class="form-label">Your Name</label>
       <input type="text" class="form-control" id="name" name="name" required>
