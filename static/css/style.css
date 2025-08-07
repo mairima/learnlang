@@ -81,13 +81,15 @@ section ul li {
  border-radius: 6px;
  margin-top: 1rem;
 }
-/* Footer */
-footer {
- background: #564e4e;
- color: rgb(255, 255, 255);
- text-align: center;
- padding: 1rem;
- margin-top: 3rem;
+
+.site-footer {
+  background-color: #adade6; /* light blue */ 
+  color: #000000;            /* black text */
+  text-align: center;
+  padding: 1.5rem 1rem;
+  margin-top: 3rem;
+  font-size: 1rem;
+  border-top: 2px solid #ccc; /* optional: subtle border */
 }
 /* extra*/
 .benefits .card {
