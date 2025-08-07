@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',     # Required for allauth or site-based logic
+    'allauth',                 # Django Allauth for authentication
+    'allauth.account',         # Django Allauth account management
     'languages', 
 ]
 
@@ -50,6 +52,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AuthenticationMiddleware',
 ]
 
 ROOT_URLCONF = 'learnlang.urls'
@@ -101,7 +104,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'), )
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default auto field
@@ -112,6 +115,6 @@ LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 SITE_ID = 1
-
+ACCOUNT_EMAIL_VERIFICATION = 'none'  # Disable email verification for simplicity
 # Message storage settings
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
