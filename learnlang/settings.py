@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',     # Required for allauth or site-based logic
     'languages', 
-    'django.contrib.messages',   # Your app
 ]
 
 MIDDLEWARE = [
