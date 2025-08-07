@@ -8,9 +8,14 @@ urlpatterns = [
     path('get-tutor/', views.get_tutor, name='tutor'),
     path('book/', views.book_tutor, name='booking'),
     path('contact/', views.contact_us, name='contact_us'),
+    # crud booking page
+    path('my-bookings/', views.my_bookings_view, name='my_bookings'),
+    path('booking/edit/<int:booking_id>/', views.edit_booking_view, name='edit_booking'),
+    path('booking/delete/<int:booking_id>/', views.delete_booking_view, name='delete_booking'),
 
     # Auth
     path('login/', auth_views.LoginView.as_view(template_name='accounts/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='accounts/logout.html'), name='logout'),
     path('signup/', views.signup, name='signup'),
+    #
 ]
