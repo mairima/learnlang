@@ -1,6 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
 <h2>Login</h2>
+
+{% if next %}
+    <div class="alert alert-warning">
+    You need to log in to access that page.
+    </div>
+{% endif %}
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
