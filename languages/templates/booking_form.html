@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Book a Tutor{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2>Book a Tutor</h2>
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Book</button>
+  </form>
+</div>
+{% endblock %}
