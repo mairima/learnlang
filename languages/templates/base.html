@@ -38,13 +38,13 @@
           </li>
         </ul>
         {% if user.is_authenticated %}
-        <form method="post" action="{% url 'logout' %}" class="ms-3">
+        <form method="post" action="{% url 'account_logout' %}" class="ms-3">
           {% csrf_token %}
           <button class="btn btn-outline-danger" type="submit">Logout</button>
         </form>
         {% else %}
-        <a href="{% url 'login' %}" class="btn btn-outline-primary ms-3">Log in</a>
-        <a href="{% url 'signup' %}" class="btn btn-outline-secondary ms-2">Sign up</a>
+        <a href="{% url 'account_login' %}" class="btn btn-outline-primary ms-3">Log in</a>
+        <a href="{% url 'account_signup' %}" class="btn btn-outline-secondary ms-2">Sign up</a>
         {% endif %}
       </div>
     </div>

@@ -22,7 +22,6 @@ from languages import views
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('', include('languages.urls')),
-    path("accounts/signup/", views.signup, name="signup"),  # ✅ Now this works
-    path("accounts/", include("django.contrib.auth.urls")),
+    path("accounts/", include("allauth.urls")),
     path("", views.home, name="home"),  # ✅ Use home view as landing page
 ]

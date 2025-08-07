@@ -2,23 +2,13 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.core.mail import send_mail
 #Add bookingpage crud
 from .models import Booking, Course
 from .forms import BookingForm
 
-# --- New Signup View ---
-def signup(request):
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('login')
-    else:
-        form = UserCreationForm()
-    return render(request, 'accounts/signup.html', {'form': form})
+
 
 # Home view
 def home(request):
