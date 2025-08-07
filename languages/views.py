@@ -20,52 +20,6 @@ def signup(request):
         form = UserCreationForm()
     return render(request, 'accounts/signup.html', {'form': form})
 
-
-# --- Language Views ---
-def language_list(request):
-    languages = Language.objects.all()
-    return render(request, 'languages/language_list.html', {'languages': languages})
-
-def language_detail(request, pk):
-    language = get_object_or_404(Language, pk=pk)
-    return render(request, 'languages/language_detail.html', {'language': language})
-
-@login_required
-def language_create(request):
-    if not request.user.is_superuser:
-        messages.error(request, "You must be an admin to perform this action.")
-        return redirect('language_list')
-
-    form = LanguageForm(request.POST or None)
-    if form.is_valid():
-        form.save()
-        return redirect('language_list')
-    return render(request, 'languages/language_form.html', {'form': form})
-
-@login_required
-def language_update(request, pk):
-    if not request.user.is_superuser:
-        messages.error(request, "You must be an admin to perform this action.")
-        return redirect('language_list')
-    language = get_object_or_404(Language, pk=pk)
-    form = LanguageForm(request.POST or None, instance=language)
-    if form.is_valid():
-        form.save()
-        return redirect('language_list')
-    return render(request, 'languages/language_form.html', {'form': form})
-
-@login_required
-def language_delete(request, pk):
-    if not request.user.is_superuser:
-        messages.error(request, "You must be an admin to perform this action.")
-        return redirect('language_list')
-    language = get_object_or_404(Language, pk=pk)
-    if request.method == "POST":
-        language.delete()
-        return redirect('language_list')
-    return render(request, 'languages/language_confirm_delete.html', {'language': language})
-
-
 # Home view
 def home(request):
     return render(request, 'home.html')
@@ -79,3 +33,13 @@ def book_tutor(request):
     return render(request, 'booking.html')
 def contact_us(request):
     return render(request, 'contact_us.html')
+
+#Restricted view-Booking page
+@login_required
+def book_tutor(request):
+    return render(request, 'booking.html')
+#restricted view-english page
+@login_required
+def english(request):
+    return render(request, 'english.html')
+
