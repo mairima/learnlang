@@ -5,22 +5,6 @@
 
 {% block content %}
 <div class="container mt-5">
-  <div class="row">
-    <!-- Left: Contact Info -->
-    <div class="col-md-5 mb-4">
-      <h2>Contact Information</h2>
-      <p><strong>Email:</strong> support@learnlang.com</p>
-      <p><strong>Phone:</strong> +49 30 12345678</p>
-      <p><strong>Business Hours (Germany):</strong><br>
-        Monday – Friday: 9:00 AM – 5:00 PM<br>
-        Saturday – Sunday: On demand
-      </p>
-
-      <div class="mt-4">
-        <a href="{% url 'booking' %}" class="btn btn-success">Book Now</a>
-      </div>
-    </div>
-
     <!-- Right: Contact Form -->
     <div class="col-md-7">
       <h2>Send Us a Message</h2>
@@ -40,6 +24,10 @@
         </div>
         <button type="submit" class="btn btn-primary">Send Message</button>
       </form>
+      <!--Book now button-->
+      <div class="mt-4">
+        <a href="{% url 'booking' %}" class="btn btn-success">Book Now</a>
+      </div>
     </div>
   </div>
 </div>

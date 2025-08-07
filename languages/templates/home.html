@@ -4,7 +4,7 @@
 {% block title %}LearnLang – Home{% endblock %}
 
 {% block content %}
-<main class="container mt-4">
+<div class="container mt-4">
   <header>
     <h1>Welcome to LearnLang</h1>
     <p>Your gateway to mastering languages – starting with English</p>
@@ -22,7 +22,7 @@
     <div class="benefits row row-cols-1 row-cols-md-2 g-4 mt-3">
       <div class="col">
         <div class="card h-100 text-center">
-          <img src="https://cdn-icons-png.flaticon.com/512/201/201623.png" class="card-img-top mx-auto mt-3" alt="Career Icon" style="width: 60px;">
+          <img src="{% static 'images/career.png' %}" class="card-img-top mx-auto mt-3" alt="Career Icon" style="width: 60px;">
           <div class="card-body">
             <h5 class="card-title">Career Boost</h5>
             <p class="card-text">English opens doors to international careers and promotions.</p>
@@ -31,7 +31,7 @@
       </div>
       <div class="col">
         <div class="card h-100 text-center">
-          <img src="https://cdn-icons-png.flaticon.com/512/197/197374.png" class="card-img-top mx-auto mt-3" alt="World Icon" style="width: 60px;">
+          <img src="{% static 'images/travel.jpg' %}" class="card-img-top mx-auto mt-3" alt="World Icon" style="width: 60px;">
           <div class="card-body">
             <h5 class="card-title">Travel the World</h5>
             <p class="card-text">Communicate confidently when visiting English-speaking countries.</p>
@@ -40,7 +40,7 @@
       </div>
       <div class="col">
         <div class="card h-100 text-center">
-          <img src="https://cdn-icons-png.flaticon.com/512/2965/2965567.png" class="card-img-top mx-auto mt-3" alt="Education Icon" style="width: 60px;">
+          <img src="{% static 'images/education.jpg' %}" class="card-img-top mx-auto mt-3" alt="Education Icon" style="width: 60px;">
           <div class="card-body">
             <h5 class="card-title">Access Education</h5>
             <p class="card-text">Study at top universities that require English proficiency.</p>
@@ -49,7 +49,7 @@
       </div>
       <div class="col">
         <div class="card h-100 text-center">
-          <img src="https://cdn-icons-png.flaticon.com/512/2721/2721283.png" class="card-img-top mx-auto mt-3" alt="Internet Icon" style="width: 60px;">
+          <img src="{% static 'images/internet.png' %}" class="card-img-top mx-auto mt-3" alt="Internet Icon" style="width: 60px;">
           <div class="card-body">
             <h5 class="card-title">Use the Internet</h5>
             <p class="card-text">Understand online resources, videos, and books written in English.</p>
@@ -58,5 +58,5 @@
       </div>
     </div>
   </section>
-</main>
+</div>
 {% endblock %}

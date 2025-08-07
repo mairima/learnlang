@@ -1,120 +1,101 @@
 body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: yellow;
 }
 nav a {
-    margin-right: 10px;
+    margin-right: 10px;
 }
-/* static/css/style.css */
-/*body {
-    font-family: Arial, sans-serif;
-    background: #f4f4f4;
-
-}*/
 .form-container {
-    max-width: 400px;
-    margin: auto;
-    background: white;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+    max-width: 400px;
+    margin: auto;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
 }
 input, button {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
 }
 button {
-    background: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
+    background: greenyellow;
+    color: white;
+    border: none;
+    cursor: pointer;
 }
 button:hover {
-    background: #0056b3;
+    background: #0056b3;
 }
-
 /* Add any additional styles here */
-
-
 header {
-  background-color: #005a9c;
-  color: white;
-  padding: 2rem 1rem;
-  text-align: center;
+  background-color: #005a9c;
+  color: white;
+  padding: 2rem 1rem;
+  text-align: center;
 }
-
 header h1 {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
 }
-
 .navigation ul {
-  list-style: none;
-  padding: 0;
-  margin-top: 1rem;
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
+  list-style: none;
+  padding: 0;
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
 }
-
 .navigation a {
-  color: white;
-  text-decoration: none;
-  font-weight: bold;
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
 }
-
 .navigation a:hover {
-  text-decoration: underline;
+  text-decoration: underline;
 }
-
 /* Section layout */
 section {
-  max-width: 900px;
-  margin: 2rem auto;
-  padding: 2rem;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
-
 section h2 {
-  color: #005a9c;
-  margin-bottom: 1rem;
+  color: #005a9c;
+  margin-bottom: 1rem;
 }
-
 section ul {
-  padding-left: 1.2rem;
+  padding-left: 1.2rem;
 }
-
 section ul li {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
 }
-
 .alphabet {
-  background: #e6f0ff;
-  padding: 1rem;
-  font-size: 1.2rem;
-  letter-spacing: 0.2rem;
-  text-align: center;
-  border-radius: 6px;
-  margin-top: 1rem;
+  background: #e6f0ff;
+  padding: 1rem;
+  font-size: 1.2rem;
+  letter-spacing: 0.2rem;
+  text-align: center;
+  border-radius: 6px;
+  margin-top: 1rem;
 }
-
 /* Footer */
 footer {
-  background: #222;
-  color: white;
-  text-align: center;
-  padding: 1rem;
-  margin-top: 3rem;
+  background: #222;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  margin-top: 3rem;
 }
-
 /* extra*/
 .benefits .card {
-  border: none;
-  transition: transform 0.2s;
+  border: none;
+  transition: transform 0.2s;
 }
 .benefits .card:hover {
-  transform: scale(1.02);
-  box-shadow: 0 0 10px rgba(0,0,0,0.15);
+  transform: scale(1.02);
+  box-shadow: 0 0 10px rgba(0,0,0,0.15);
 }
