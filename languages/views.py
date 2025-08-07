@@ -5,6 +5,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.core.mail import send_mail
+#Add bookingpage crud
+from .models import Booking, Course
+from .forms import BookingForm
 
 # --- New Signup View ---
 def signup(request):
@@ -40,3 +43,27 @@ def book_tutor(request):
 def english(request):
     return render(request, 'english.html')
 
+# Crud Booking page
+def my_bookings_view(request):
+    bookings = Booking.objects.filter(user=request.user)
+    return render(request, 'my_bookings.html', {'bookings': bookings})
+
+@login_required
+def edit_booking_view(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id, user=request.user)
+    if request.method == 'POST':
+        form = BookingForm(request.POST, instance=booking)
+        if form.is_valid():
+            form.save()
+            return redirect('my_bookings')
+    else:
+        form = BookingForm(instance=booking)
+    return render(request, 'edit_booking.html', {'form': form})
+
+@login_required
+def delete_booking_view(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id, user=request.user)
+    if request.method == 'POST':
+        booking.delete()
+        return redirect('my_bookings')
+    return render(request, 'delete_booking.html', {'booking': booking})
