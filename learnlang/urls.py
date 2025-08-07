@@ -16,12 +16,19 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from languages.views import home, english #if exist
+from django.contrib.auth import views as auth_views  #  Added for login/logout
+from languages.views import home, english
 from languages import views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path('', include('languages.urls')),
-    path("accounts/", include("allauth.urls")),
-    path("", views.home, name="home"),  # ✅ Use home view as landing page
+
+    path('login/', auth_views.LoginView.as_view(
+        template_name='accounts/login.html'), name='login'),  #  Fix: Add login URL
+
+    path("accounts/", include("allauth.urls")),  # optional if still using allauth
+
+    path('', include('languages.urls')),  # your app routes
+
+    path("", views.home, name="home"),  # landing page
 ]
