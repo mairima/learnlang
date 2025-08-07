@@ -23,7 +23,7 @@ if os.path.exists(os.path.join(BASE_DIR, 'env.py')):
 SECRET_KEY = os.getenv("SECRET_KEY", 'django-insecure-x6u!)twc_=)thsl#a)rei&v6msvvk-n*uk!&%(rr@-^)p675yc')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG", "True") == "True"
+DEBUG = os.getenv("DEBUG", "False") == "True"
 
 # Allowed hosts from environment variable (split by comma)
 ALLOWED_HOSTS = [h.strip() for h in os.getenv("ALLOWED_HOSTS", "").split(",") if h.strip()]
