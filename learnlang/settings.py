@@ -24,7 +24,7 @@ if os.path.exists(os.path.join(BASE_DIR, 'env.py')):
 SECRET_KEY = os.getenv("SECRET_KEY", 'KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG", "False") == "True"
+DEBUG = os.getenv("DEBUG", False)
 
 # Allowed hosts from environment variable (split by comma)
 ALLOWED_HOSTS = [h.strip() for h in os.getenv("ALLOWED_HOSTS", "").split(",") if h.strip()]
