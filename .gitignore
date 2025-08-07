@@ -19,9 +19,5 @@ db.sqlite3
 .vscode/
 settings.json
 
-# OS
-.DS_Store
-Thumbs.db
-
 # Heroku
 *.orig
