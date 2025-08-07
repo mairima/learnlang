@@ -118,3 +118,6 @@ EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'your_app_password')
 # Heroku deployment settings
 import django_heroku
 django_heroku.settings(locals())
+
+# Message storage settings
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
