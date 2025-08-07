@@ -80,7 +80,7 @@ def book_tutor(request):
     courses = Course.objects.all()
     return render(request, 'booking.html', {'courses': courses})
 # Login required for my bookings
-@login_required(login_url='login')  # This redirects to /login if not logged in
+@login_required()  # This redirects to /login if not logged in
 def my_bookings_view(request):
     bookings = Booking.objects.filter(user=request.user)
     return render(request, 'my_bookings.html', {'bookings': bookings})
