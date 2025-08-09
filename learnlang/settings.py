@@ -10,24 +10,40 @@ from dotenv import load_dotenv
 from django.contrib.messages import constants as messages
 import dj_database_url
 
+
+BASE_DIR = Path(__file__).resolve().parent.parent
 # Load .env file if present
-load_dotenv()
+load_dotenv()  # loads .env if present
+
 
 # Base directory of the project
 BASE_DIR = Path(__file__).resolve().parent.parent
+
 
 # Optional: Load Python-style env file if exists
 if os.path.exists(os.path.join(BASE_DIR, 'env.py')):
     import env
 
+
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("SECRET_KEY", 'KEY')
+SECRET_KEY = os.getenv("SECRET_KEY", 'KEY') # set in Heroku config vars!
+
+
+def env_bool(name: str, default=False) -> bool:
+    return str(os.getenv(name, str(default))).lower() in ("1", "true", "yes", "on")
+
+
+DEBUG = env_bool("DEBUG", False)
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", False)
 
+
 # Allowed hosts from environment variable (split by comma)
-ALLOWED_HOSTS = [h.strip() for h in os.getenv("ALLOWED_HOSTS", "").split(",") if h.strip()]
+ALLOWED_HOSTS = ["learnlang.herokuapp.com", "localhost", "127.0.0.1", "learnlang-e0549c82066a.herokuapp.com"]
+CSRF_TRUSTED_ORIGINS = ["https://learnlang.herokuapp.com", "https://learnlang-e0549c82066a.herokuapp.com"]
+
 
 # Application definition
 INSTALLED_APPS = [
@@ -44,6 +60,13 @@ INSTALLED_APPS = [
     'cloudinary',
     'cloudinary_storage', # Cloudinary storage backend
 ]
+
+
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",                 # default
+    "allauth.account.auth_backends.AuthenticationBackend",       # allauth
+]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -62,6 +85,7 @@ ROOT_URLCONF = 'learnlang.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        # project-level templates (e.g., templates/account/login.html)
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -74,12 +98,14 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'learnlang.wsgi.application'
+WSGI_APPLICATION = 'learnlang.wsgi.application' 
 #Databases
-if "DATABASE_URL" in os.environ:
+if os.getenv("DATABASE_URL"):
     print("connected to Postgres (live)")
     DATABASES = {
-        "default": dj_database_url.parse(os.environ.get("DATABASE_URL"))
+        "default": dj_database_url.parse(os.environ.get("DATABASE_URL"),
+        conn_max_age=600, ssl_require=not DEBUG,
+        )
     }
 else:
     print("connected to db.sqlite3 (testing)")
@@ -98,6 +124,7 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},  # NOQA 
 ]
 
+# I18N
 # Internationalization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
@@ -106,17 +133,65 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'), )
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [BASE_DIR / "static"] if (BASE_DIR / "static").exists() else []
+STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+
+# Media / Cloudinary (optional)
+# If you’re using Cloudinary for user uploads:
+if os.getenv("CLOUDINARY_URL") or (
+    os.getenv("CLOUDINARY_CLOUD_NAME")
+    and os.getenv("CLOUDINARY_API_KEY")
+    and os.getenv("CLOUDINARY_API_SECRET")
+):
+    DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+    CLOUDINARY_STORAGE = {
+        "CLOUD_NAME": os.getenv("CLOUDINARY_CLOUD_NAME"),
+        "API_KEY": os.getenv("CLOUDINARY_API_KEY"),
+        "API_SECRET": os.getenv("CLOUDINARY_API_SECRET"),
+    }
+    
 
 # Default auto field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Authentication settings
-LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/'
+LOGIN_URL = "/login/"
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
 SITE_ID = 1
+
 ACCOUNT_EMAIL_VERIFICATION = 'none'  # Disable email verification for simplicity
 # Message storage settings
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
+
+
+if not DEBUG:
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+    SECURE_HSTS_PRELOAD = False
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    X_FRAME_OPTIONS = "DENY"
+    # Heroku sets this, but keep it explicit:
+    USE_X_FORWARDED_HOST = True
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+# ------------------------------------------------------------------------------
+# Logging (show errors clearly on Heroku)
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {"console": {"class": "logging.StreamHandler"}},
+    "root": {"handlers": ["console"], "level": "INFO"},
+    "loggers": {
+        "django.request": {"handlers": ["console"], "level": "ERROR", "propagate": True},
+        "django.security": {"handlers": ["console"], "level": "ERROR", "propagate": True},
+    },
+}
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
