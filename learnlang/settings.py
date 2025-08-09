@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'allauth',                 # Django Allauth for authentication
     'allauth.account',         # Django Allauth account management
     'languages', 
+    'cloudinary',
+    'cloudinary_storage', # Cloudinary storage backend
 ]
 
 MIDDLEWARE = [
