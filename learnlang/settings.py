@@ -7,46 +7,30 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 import dj_database_url
+if os.path.exists(".env"):
+    import env  # noqa: F401
+    load_dotenv()  # load .env if present
 
 # ------------------------------------------------------------------------------
 # Paths & env
 # ------------------------------------------------------------------------------
 BASE_DIR = Path(__file__).resolve().parent.parent
-load_dotenv()  # load .env if present
-
-def env_bool(name: str, default=False) -> bool:
-    return str(os.getenv(name, str(default))).lower() in ("1", "true", "yes", "on")
-
-def env_list(name: str, default: str = "") -> list[str]:
-    raw = os.getenv(name, default)
-    return [x.strip() for x in raw.split(",") if x.strip()]
-
-# Optional: load env.py if you use it locally
-env_py = BASE_DIR / "env.py"
-if env_py.exists():
-    import env  # noqa: F401
+TEMPLATES_DIR = os.path.join(BASE_DIR, "languages", "templates")
 
 # ------------------------------------------------------------------------------
 # Core config
 # ------------------------------------------------------------------------------
 SECRET_KEY = os.getenv("SECRET_KEY", "CHANGE-ME-UNSAFE")
-DEBUG = env_bool("DEBUG", True)
+DEBUG = os.getenv("DEBUG", False)
 
-ALLOWED_HOSTS = env_list(
-    "ALLOWED_HOSTS",
-    "localhost,127.0.0.1,learnlang.herokuapp.com,learnlang-e0549c82066a.herokuapp.com",
+ALLOWED_HOSTS = []
+CSRF_TRUSTED_ORIGINS = []
+host= os.getenv(
+    "ALLOWED_HOSTS"
 )
-
-# CSRF trusted origins must include the scheme (http/https)
-CSRF_TRUSTED_ORIGINS = env_list(
-    "CSRF_TRUSTED_ORIGINS",
-    "http://127.0.0.1:8000,http://localhost:8000,"
-    "https://learnlang.herokuapp.com,https://learnlang-e0549c82066a.herokuapp.com",
-)
-
-# Cookies: secure in prod (HTTPS), relaxed on localhost (HTTP)
-CSRF_COOKIE_SECURE = not DEBUG
-SESSION_COOKIE_SECURE = not DEBUG
+if host:
+    ALLOWED_HOSTS.append(host)
+    CSRF_TRUSTED_ORIGINS.append(f"https://{host}")
 
 # ------------------------------------------------------------------------------
 # Apps
@@ -96,7 +80,7 @@ TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         # Add a top-level /templates dir if you have one:
-        "DIRS": [BASE_DIR / "templates"],
+        "DIRS": [TEMPLATES_DIR],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -153,6 +137,7 @@ USE_TZ = True
 # ------------------------------------------------------------------------------
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
 # If you have a local "static" folder for source assets:
 STATICFILES_DIRS = [BASE_DIR / "static"] if (BASE_DIR / "static").exists() else []
 
@@ -202,11 +187,6 @@ ACCOUNT_EMAIL_VERIFICATION = "none"
 
 # Allow GET logout for simple navbar link (optional convenience)
 ACCOUNT_LOGOUT_ON_GET = True
-
-# Custom signup form (collects role, etc.)
-ACCOUNT_FORMS = {
-    "signup": "languages.forms.RoleSignupForm",
-}
 
 # ------------------------------------------------------------------------------
 # Security (production hardening)
