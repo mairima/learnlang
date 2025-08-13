@@ -21,16 +21,12 @@ def english(request):
     return render(request, "english.html")
 
 
-def get_tutor(request):
-    return render(request, "tutor.html")
-
-
 def contact_us(request):
     return render(request, "contact_us.html")
 
 
 # -----------------------------
-# Profile/role helpers
+# Profile helper
 # -----------------------------
 def _ensure_profile(user) -> Profile:
     """
@@ -42,21 +38,14 @@ def _ensure_profile(user) -> Profile:
 
 
 def login_redirect_by_role(user) -> str:
-    """Return the named URL for the dashboard based on Profile.role."""
-    role = _ensure_profile(user).role
-    return "student_dashboard" if role == "student" else "tutor_dashboard"
+    _ensure_profile(user)  # keep ensuring profile exists
+    return "student_dashboard"
 
 
 def is_student(user) -> bool:
     if not getattr(user, "is_authenticated", False):
         return False
     return _ensure_profile(user).role == "student"
-
-
-def is_tutor(user) -> bool:
-    if not getattr(user, "is_authenticated", False):
-        return False
-    return _ensure_profile(user).role == "tutor"
 
 
 # -----------------------------
@@ -66,21 +55,18 @@ def is_tutor(user) -> bool:
 def post_login_redirect(request):
     """
     Users land here after login (LOGIN_REDIRECT_URL = 'after_login').
-    We route them to the proper dashboard by role.
     """
     return redirect(login_redirect_by_role(request.user))
 
 
 # -----------------------------
-# Dashboards (role-protected)
+# Dashboard (student only)
 # -----------------------------
 @user_passes_test(is_student)
 def student_dashboard(request):
-    # No more is_active field; show all or add your own filter
     active_courses = (
         Course.objects
         .annotate(
-            # avoid clashing with the @property booked_count on the model
             booked_count_db=Count(
                 "bookings",
                 filter=Q(bookings__status__in=["CONFIRMED", "PENDING"]),
@@ -101,11 +87,6 @@ def student_dashboard(request):
     })
 
 
-@user_passes_test(is_tutor)
-def tutor_dashboard(request):
-    return render(request, "dashboard/tutor_dashboard.html")
-
-
 # -----------------------------
 # Booking: create/list/edit/delete
 # -----------------------------
@@ -119,7 +100,7 @@ def book_tutor(request):
         form = BookingForm(request.POST, user=request.user)
         if form.is_valid():
             booking = form.save(commit=False)
-            booking.user = request.user  # assign owner
+            booking.user = request.user
             booking.save()
             messages.success(request, "🎉 Booking submitted successfully!")
             return redirect("my_bookings")
@@ -127,9 +108,12 @@ def book_tutor(request):
     else:
         form = BookingForm(user=request.user)
 
-    # Course was renamed: order by title (not name)
     courses = Course.objects.all().order_by("title")
     return render(request, "booking.html", {"form": form, "courses": courses})
+
+@login_required
+def get_tutor(request):
+    return render(request, "tutor.html")
 
 
 @login_required
@@ -137,7 +121,7 @@ def my_bookings_view(request):
     bookings = (
         Booking.objects.filter(user=request.user)
         .select_related("course")
-        .order_by("-created_at", "-id")  # created_at exists on Booking
+        .order_by("-created_at", "-id")
     )
     return render(request, "my_bookings.html", {"bookings": bookings})
 
