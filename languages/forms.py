@@ -3,24 +3,19 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.contrib.auth import get_user_model
 
-# If you're using django-allauth (you are), extend its SignupForm
+# django-allauth
 from allauth.account.forms import SignupForm as AllauthSignupForm
 
-from .models import Booking, Profile, Course # Ensure Course is imported if used in BookingForm
+from .models import Booking, Profile, Course
 
 User = get_user_model()
-
-ROLE_CHOICES = (
-    ("student", "Student"),
-    ("tutor", "Tutor"),
-)
 
 
 class BookingForm(forms.ModelForm):
     """
-    Booking form for your Booking model.
-    Validates that a user can't book the same course twice.
-    NOTE: Ensure these fields exist on your Booking model.
+    Booking form for Booking model.
+    - Orders course dropdown by start_date then title
+    - Validates: a user can't book the same course twice
     """
     class Meta:
         model = Booking
@@ -32,39 +27,37 @@ class BookingForm(forms.ModelForm):
 
     def __init__(self, *args, user=None, **kwargs):
         super().__init__(*args, **kwargs)
-        self.user = user  # pass from the view
+        self.user = user  # set by the view
+        # Populate and order the course dropdown
+        self.fields["course"].queryset = Course.objects.order_by("start_date", "title")
 
     def clean(self):
         cleaned = super().clean()
         course = cleaned.get("course")
 
-        # Duplicate booking check (only if we have a logged-in user and a course)
+        # Prevent duplicate booking of the same course by the same user
         if self.user and course:
             qs = Booking.objects.filter(user=self.user, course=course)
-            # Exclude self when editing
             if self.instance and self.instance.pk:
                 qs = qs.exclude(pk=self.instance.pk)
             if qs.exists():
                 raise ValidationError("You already booked this course.")
-
         return cleaned
 
 
 class RoleSignupForm(AllauthSignupForm):
     """
-    Allauth-compatible signup form that adds a 'role' field and writes it to Profile.
-    Wire it in settings.py:
+    Allauth signup form without any role choice UI.
+    Every new user is assigned the 'student' role.
+    (Make sure settings.py has:
         ACCOUNT_FORMS = {"signup": "languages.forms.RoleSignupForm"}
+    )
     """
-    role = forms.ChoiceField(choices=ROLE_CHOICES, initial="student")
-
     def save(self, request):
-        # Create the user via allauth first
         user = super().save(request)
-
-        # Ensure Profile exists, then set the role
-        profile, _ = Profile.objects.get_or_create(user=user)
-        profile.role = self.cleaned_data.get("role", "student")
-        profile.save()
-
+        profile, _ = Profile.objects.get_or_create(user=user, defaults={"role": "student"})
+        # If it existed already, still enforce student role
+        if profile.role != "student":
+            profile.role = "student"
+            profile.save()
         return user
