@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard · LearnLang{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h1 class="mb-4">Courses Dashboard</h1>
+
+  <div class="row g-3 mb-4">
+    <div class="col-12 col-md-4">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title mb-2">Overview</h5>
+          <p class="mb-1"><strong>Total courses:</strong> {{ total_courses }}</p>
+          <p class="mb-1"><strong>Total bookings:</strong> {{ total_bookings }}</p>
+          {% if upcoming_bookings is not None %}
+            <p class="mb-0"><strong>Upcoming bookings:</strong> {{ upcoming_bookings }}</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-4">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title mb-2">Django Admin</h5>
+          <p class="mb-2">Manage users, bookings, and courses.</p>
+          <a class="btn btn-primary" href="{% url 'admin:index' %}">Open Admin Site</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- All courses that ever had a booking -->
+  <h2 class="h5 mt-4">Courses with bookings (all time)</h2>
+  {% if booked_courses %}
+    <div class="table-responsive mb-4">
+      <table class="table table-sm">
+        <thead>
+          <tr>
+            <th>Course</th>
+            <th class="text-end">Total bookings</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for c in booked_courses %}
+            <tr>
+              <td>{{ c.title }}</td>
+              <td class="text-end">{{ c.total_bookings }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p class="text-muted">No booked courses yet.</p>
+  {% endif %}
+
+  <!-- Previous bookings (latest 50) -->
+  <h2 class="h5 mt-4">Previous bookings (latest 50)</h2>
+  {% if previous_bookings %}
+    <div class="table-responsive">
+      <table class="table table-striped table-sm">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Booked at</th>
+            <th>User</th>
+            <th>Course</th>
+            <th>When</th>
+            <th>Message</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for b in previous_bookings %}
+            <tr>
+              <td>{{ b.id }}</td>
+              <td>
+                {% if b.created_at %}{{ b.created_at|date:"Y-m-d H:i" }}{% else %}-{% endif %}
+              </td>
+              <td>
+                {% if b.user %}{{ b.user.username }}{% else %}-{% endif %}
+              </td>
+              <td>
+                {% if b.course %}{{ b.course.title }}{% else %}-{% endif %}
+              </td>
+              <td>
+                {# Replace 'date' with your actual booking datetime field if different #}
+                {% if b.date %}{{ b.date|date:"Y-m-d" }}{% else %}-{% endif %}
+              </td>
+              <td class="text-truncate" style="max-width: 240px;">
+                {{ b.message|default:"–" }}
+              </td>
+              <td>
+                {{ b.status|default:"—" }}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p class="text-muted">No bookings found.</p>
+  {% endif %}
+</div>
+{% endblock %}
