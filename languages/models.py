@@ -42,9 +42,6 @@ class Course(models.Model):
     capacity = models.PositiveIntegerField(default=10)
     start_date = models.DateField()
     end_date = models.DateField()
-    # optional: course_type/level if your templates use them
-    # course_type = models.CharField(max_length=10, choices=(("MAIN","Main"),("TOEFL","TOEFL")), blank=True, default="MAIN")
-    # level = models.CharField(max_length=50, blank=True)
 
     class Meta:
         ordering = ("start_date", "title")
@@ -54,7 +51,7 @@ class Course(models.Model):
 
     @property
     def booked_count(self):
-        # Count only active/confirmed seats (adjust statuses as needed)
+        # Count only active/confirmed seats
         return self.bookings.filter(Q(status="CONFIRMED") | Q(status="PENDING")).count()
 
     @property
@@ -95,12 +92,11 @@ class Booking(models.Model):
         return f"{self.user} - {self.course} on {self.date} at {self.time}"
 
 
-# Profile model for user roles
+# Profile model for user roles (now student-only)
 class Profile(models.Model):
-    ROLE_CHOICES = (
-        ("student", "Student"),
-        ("tutor", "Tutor"),
-    )
+    # Single role left to avoid removing the column everywhere
+    ROLE_CHOICES = (("student", "Student"),)
+
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile"
     )
@@ -112,6 +108,6 @@ class Profile(models.Model):
 
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
-    """Automatically ensure a Profile exists for every new User."""
+    """Ensure every new user has a student profile."""
     if created:
-        Profile.objects.get_or_create(user=instance)
+        Profile.objects.get_or_create(user=instance, defaults={"role": "student"})
