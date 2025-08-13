@@ -1,9 +1,9 @@
 # languages/urls.py
 from django.urls import path
-from .import views # import views
+from . import views
 
 urlpatterns = [
-    path("", views.home, name="home"), 
+    path("", views.home, name="home"),
 
     # Content pages
     path("english/", views.english, name="english"),
@@ -18,8 +18,10 @@ urlpatterns = [
 
     # Auth routing
     path("after-login/", views.post_login_redirect, name="after_login"),
-    path("", views.home, name="home"),
+
+    # Admin dashboard
     path("dashboard/admin/", views.admin_dashboard, name="admin_dashboard"),
-    # Admin dashboard only
-    path("dashboard/admin/", views.admin_dashboard, name="admin_dashboard"),
+
+    # Override allauth password reset → show "contact admin" (no email sent)
+    path("accounts/password/reset/", views.admin_only_password_reset, name="account_reset_password"),
 ]
