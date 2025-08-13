@@ -74,9 +74,6 @@ class Booking(models.Model):
     name = models.CharField(max_length=100, default="Guest")
     email = models.EmailField(blank=True, null=True)
 
-    date = models.DateField(db_index=True)
-    time = models.TimeField(default=time_obj(12, 0))  # Default: 12:00 PM
-
     message = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
