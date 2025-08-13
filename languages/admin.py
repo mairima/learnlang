@@ -19,4 +19,4 @@ class CourseAdmin(admin.ModelAdmin):
 
 @admin.register(Booking)
 class BookingAdmin(admin.ModelAdmin):
-    list_display = ('user', 'course', 'name')
+    list_display = ('user', 'course', 'name', 'status', 'created_at')

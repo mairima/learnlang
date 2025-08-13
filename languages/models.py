@@ -86,7 +86,8 @@ class Booking(models.Model):
         ]
 
     def __str__(self):
-        return f"{self.user} - {self.course} on {self.date} at {self.time}"
+        # Return a string representation of the booking
+        return f"{self.user} - {self.course} [{self.status}] • {self.created_at:%Y-%m-%d %H:%M}"
 
 
 # Profile model for user roles (now student-only)
