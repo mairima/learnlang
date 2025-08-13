@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib import messages
+from django.contrib import messages as dj_messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.utils import timezone  # needed for date logic in admin dashboard
 
@@ -8,6 +8,7 @@ from django.db.models.functions import Greatest
 
 from .models import Booking, Course, Profile
 from .forms import BookingForm
+from django.views.decorators.http import require_http_methods
 
 
 # -----------------------------
@@ -68,6 +69,7 @@ def post_login_redirect(request):
     """
     Users land here after login (LOGIN_REDIRECT_URL = 'post_login_redirect').
     """
+    list(dj_messages.get_messages(request))
     return redirect(login_redirect_by_role(request.user))
 
 
@@ -215,3 +217,25 @@ def delete_booking_view(request, booking_id):
         messages.success(request, "Booking deleted.")
         return redirect("my_bookings")
     return render(request, "delete_booking.html", {"booking": booking})
+
+# admin-only password reset view
+@require_http_methods(["GET", "POST"])
+def admin_only_password_reset(request):
+    """
+    Replaces allauth's email-based reset. No email is sent.
+    Shows instructions to contact the administrator, and on POST
+    returns to the login page with an info message.
+    """
+    if request.method == "POST":
+        messages.info(
+            request,
+            "Password reset is handled by an administrator. Please contact us for assistance."
+        )
+        return redirect("account_login")
+
+    # Use your real contact details here
+    context = {
+        "contact_email": "info@learnlang.com",
+        "contact_phone": "0049 123456",
+    }
+    return render(request, "account/password_reset_disabled.html", context)
