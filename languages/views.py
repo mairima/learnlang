@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.utils import timezone  # needed for date logic in admin dashboard
 
 from django.db.models import Count, Q, F, IntegerField, Value
 from django.db.models.functions import Greatest
@@ -26,26 +27,37 @@ def contact_us(request):
 
 
 # -----------------------------
-# Profile helper
+# Profile helpers
 # -----------------------------
 def _ensure_profile(user) -> Profile:
     """
     Guarantee the user has a Profile. If missing (e.g., account created before
-    the signal existed), create one with a default 'student' role.
+    the signal existed), create one with a default role (kept as 'student' for compatibility).
     """
     profile, _ = Profile.objects.get_or_create(user=user, defaults={"role": "student"})
     return profile
 
 
-def login_redirect_by_role(user) -> str:
-    _ensure_profile(user)  # keep ensuring profile exists
-    return "student_dashboard"
-
-
-def is_student(user) -> bool:
+def is_admin(user):
+    """Admin = Django staff/superuser or profile.role == 'admin' (optional)."""
     if not getattr(user, "is_authenticated", False):
         return False
-    return _ensure_profile(user).role == "student"
+    if user.is_staff or user.is_superuser:
+        return True
+    try:
+        return _ensure_profile(user).role == "admin"
+    except Exception:
+        return False
+
+
+def login_redirect_by_role(user) -> str:
+    """
+    After login:
+      - Admins -> admin dashboard
+      - Others -> home
+    """
+    _ensure_profile(user)  # keep ensuring profile exists
+    return "admin_dashboard" if is_admin(user) else "home"
 
 
 # -----------------------------
@@ -54,37 +66,83 @@ def is_student(user) -> bool:
 @login_required
 def post_login_redirect(request):
     """
-    Users land here after login (LOGIN_REDIRECT_URL = 'after_login').
+    Users land here after login (LOGIN_REDIRECT_URL = 'post_login_redirect').
     """
     return redirect(login_redirect_by_role(request.user))
 
 
 # -----------------------------
-# Dashboard (student only)
+# Dashboard (admin only)
 # -----------------------------
-@user_passes_test(is_student)
-def student_dashboard(request):
+@login_required
+@user_passes_test(is_admin, login_url="home")
+def admin_dashboard(request):
+    """
+    Admin-only dashboard.
+
+    Active courses (no 'is_active' field on Course):
+      - within date range [start_date, end_date], OR
+      - has at least one booking (any time)
+
+    Also shows:
+      - courses that ever had a booking (with counts)
+      - previous bookings (latest 50)
+      - overview stats
+    """
+    today = timezone.now().date()
+
+    # Courses that have any booking (all time)
+    booked_course_ids = Booking.objects.values_list("course_id", flat=True).distinct()
+
+    # Active = has bookings OR is currently within dates
+    active_filters = Q(id__in=booked_course_ids) | Q(start_date__lte=today, end_date__gte=today)
+
+    # Use related_name 'bookings' (present in your model according to the error field list)
     active_courses = (
-        Course.objects
-        .annotate(
-            booked_count_db=Count(
-                "bookings",
-                filter=Q(bookings__status__in=["CONFIRMED", "PENDING"]),
-                distinct=True,
-            )
-        )
-        .annotate(
-            seats_left_db=Greatest(
-                F("capacity") - F("booked_count_db"),
-                Value(0),
-                output_field=IntegerField(),
-            )
-        )
-        .order_by("start_date")
+        Course.objects.filter(active_filters)
+        .annotate(total_bookings=Count("bookings"))
+        .distinct()
+        .order_by("title")
     )
-    return render(request, "dashboard/student_dashboard.html", {
-        "active_courses": active_courses
-    })
+
+    # All-time booked courses (+ counts)
+    booked_courses = (
+        Course.objects.filter(id__in=booked_course_ids)
+        .annotate(total_bookings=Count("bookings"))
+        .order_by("-id")
+    )
+
+    # Previous bookings (latest first) — prefer created_at; fallback to id if not present
+    try:
+        previous_bookings = (
+            Booking.objects.select_related("course", "user")
+            .order_by("-created_at")[:50]
+        )
+    except Exception:
+        previous_bookings = (
+            Booking.objects.select_related("course", "user")
+            .order_by("-id")[:50]
+        )
+
+    # Overview stats
+    total_courses = Course.objects.count()
+    total_bookings = Booking.objects.count()
+    # If your Booking uses a different date field for scheduled time, change 'date' below
+    try:
+        upcoming_bookings = Booking.objects.filter(date__gte=today).count()
+    except Exception:
+        upcoming_bookings = None
+
+    context = {
+        "today": today,
+        "active_courses": active_courses,
+        "booked_courses": booked_courses,
+        "previous_bookings": previous_bookings,
+        "total_courses": total_courses,
+        "total_bookings": total_bookings,
+        "upcoming_bookings": upcoming_bookings,
+    }
+    return render(request, "admin_dashboard.html", context)
 
 
 # -----------------------------
@@ -117,8 +175,10 @@ def book_tutor(request):
     courses = Course.objects.all().order_by("title")
     return render(request, "booking.html", {"form": form, "courses": courses})
 
+
 @login_required
 def get_tutor(request):
+    # If tutors are no longer used, you can safely remove this view and its URL/template.
     return render(request, "tutor.html")
 
 
