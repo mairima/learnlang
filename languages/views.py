@@ -101,12 +101,18 @@ def book_tutor(request):
         if form.is_valid():
             booking = form.save(commit=False)
             booking.user = request.user
+            booking.name = request.user.username
             booking.save()
             messages.success(request, "🎉 Booking submitted successfully!")
             return redirect("my_bookings")
         messages.error(request, "Please correct the errors below.")
     else:
-        form = BookingForm(user=request.user)
+        form = BookingForm(
+            user=request.user,
+            initial={
+                "name": request.user.username,
+            }
+        )
 
     courses = Course.objects.all().order_by("title")
     return render(request, "booking.html", {"form": form, "courses": courses})
