@@ -1,70 +1,21 @@
 {% extends "base.html" %}
+
 {% load i18n %}
 
-{% block title %}{% trans "Sign Up" %}{% endblock %}
+{% block head_title %}{% trans "Signup" %}{% endblock head_title %}
 
 {% block content %}
-<div class="container mt-4" style="max-width: 520px;">
-  <h2 class="mb-3 text-center">{% trans "Create Your Student Account" %}</h2>
+<h1>{% trans "Sign Up" %}</h1>
 
-  {# Flash messages #}
-  {% if messages %}
-    {% for message in messages %}
-      <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
-        {{ message }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
-    {% endfor %}
+<p>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
+
+<form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
+  {% csrf_token %}
+  {{ form.as_p }}
+  {% if redirect_field_value %}
+  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
   {% endif %}
+  <button type="submit">{% trans "Sign Up" %} &raquo;</button>
+</form>
 
-  {# Non-field errors #}
-  {% if form.non_field_errors %}
-    <div class="alert alert-danger">{{ form.non_field_errors }}</div>
-  {% endif %}
-
-  <form method="post" action="{% url 'account_signup' %}" novalidate>
-    {% csrf_token %}
-
-    <div class="mb-3">
-      {{ form.username.label_tag }}
-      {{ form.username }}
-      {% if form.username.errors %}
-        <div class="text-danger small">{{ form.username.errors|join:", " }}</div>
-      {% endif %}
-    </div>
-
-    <div class="mb-3">
-      {{ form.email.label_tag }}
-      {{ form.email }}
-      {% if form.email.errors %}
-        <div class="text-danger small">{{ form.email.errors|join:", " }}</div>
-      {% endif %}
-    </div>
-
-    <div class="mb-3">
-      {{ form.password1.label_tag }}
-      {{ form.password1 }}
-      {% if form.password1.errors %}
-        <div class="text-danger small">{{ form.password1.errors|join:", " }}</div>
-      {% endif %}
-    </div>
-
-    <div class="mb-3">
-      {{ form.password2.label_tag }}
-      {{ form.password2 }}
-      {% if form.password2.errors %}
-        <div class="text-danger small">{{ form.password2.errors|join:", " }}</div>
-      {% endif %}
-    </div>
-
-    <!-- Hidden field to force role to "student" -->
-    <input type="hidden" name="role" value="student">
-
-    <button class="btn btn-success w-100" type="submit">{% trans "Sign Up" %}</button>
-  </form>
-
-  <div class="text-center mt-3">
-    <p class="mb-0">{% trans "Already have an account?" %} <a href="{% url 'account_login' %}">{% trans "Sign In" %}</a></p>
-  </div>
-</div>
-{% endblock %}
+{% endblock content %}
