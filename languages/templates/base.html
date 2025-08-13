@@ -1,4 +1,5 @@
 {% load static %}
+{% load account %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,11 +24,9 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           {% if user.is_authenticated %}
-            <!-- Single dashboard link (student only) -->
             <li class="nav-item">
               <a class="nav-link" href="{% url 'student_dashboard' %}">Dashboard</a>
             </li>
-
             <li class="nav-item">
               <a class="nav-link {% if request.path == '/english/' %}active{% endif %}" href="{% url 'english' %}">English Courses</a>
             </li>
@@ -41,15 +40,16 @@
               <a class="nav-link" href="{% url 'my_bookings' %}">My Bookings</a>
             </li>
           {% endif %}
-
-          <!-- Publicly visible link -->
           <li class="nav-item">
             <a class="nav-link" href="{% url 'contact_us' %}">Contact Us</a>
           </li>
         </ul>
 
         {% if user.is_authenticated %}
-          <form method="post" action="{% url 'account_logout' %}" class="ms-3">
+          <span class="navbar-text me-3">
+            Logged in as <strong>{% user_display user %}</strong>
+          </span>
+          <form method="post" action="{% url 'account_logout' %}" class="ms-0">
             {% csrf_token %}
             <button class="btn btn-outline-danger" type="submit">Logout</button>
           </form>
@@ -63,20 +63,21 @@
 
   <main class="container mt-4 flex-grow-1">
     {% block content %}
-
-    {% if messages %}
-      <div class="container mt-3">
-        {% for message in messages %}
-          <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-          </div>
-        {% endfor %}
-      </div>
-    {% endif %}
-
+      {% if messages %}
+        <div class="container mt-3">
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
     {% endblock %}
   </main>
+
+  <!-- Scroll-to-top button -->
+  <button onclick="scrollToTop()" id="scrollToTopBtn" title="Go to top">↑</button>
 
   <!--Footer-->
   <footer class="mt-auto py-4 bg-light">
@@ -124,5 +125,8 @@
 
   <!-- Font Awesome -->
   <script src="https://kit.fontawesome.com/fa7e3e6dea.js" crossorigin="anonymous"></script>
+
+  <!-- Scroll to top JS -->
+  <script src="{% static 'js/scroll.js' %}"></script>
 </body>
 </html>

@@ -30,78 +30,100 @@ button {
 button:hover {
   background: #0056b3;
 }
-/* Add any additional styles here */
-header {
- background-color: var(--primary-blue);
- color: white;
- padding: 2rem 1rem;
- text-align: center;
+
+/* Scroll to Top Button */
+#scrollToTopBtn {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 99;
+  font-size: 18px;
+  border: none;
+  outline: none;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  padding: 10px 15px;
+  border-radius: 50%;
+  transition: background-color 0.3s;
 }
-header h1 {
- margin-bottom: 0.5rem;
-}
-.navigation ul {
- list-style: none;
- padding: 0;
- margin-top: 1rem;
- display: flex;
- justify-content: center;
- gap: 1rem;
-}
-.navigation a {
- color: white;
- text-decoration: none;
- font-weight: bold;
-}
-.navigation a:hover {
- text-decoration: underline;
-}
-/* Section layout */
-section {
- max-width: 900px;
- margin: 2rem auto;
- padding: 2rem;
- background: #fff;
- border-radius: 8px;
- box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-}
-section h2 {
- color: var(--primary-blue);
- margin-bottom: 1rem;
-}
-section ul {
- padding-left: 1.2rem;
-}
-section ul li {
- margin-bottom: 0.5rem;
-}
-.alphabet {
- background: #e6f0ff;
- padding: 1rem;
- font-size: 1.2rem;
- letter-spacing: 0.2rem;
- text-align: center;
- border-radius: 6px;
- margin-top: 1rem;
+#scrollToTopBtn:hover {
+  background-color: #0056b3;
 }
 
-.site-footer {
-  background-color: #adade6; /* light blue */ 
-  color: #000000;            /* black text */
-  text-align: center;
-  padding: 1.5rem 1rem;
-  margin-top: 3rem;
-  font-size: 1rem;
-  border-top: 2px solid #ccc; /* optional: subtle border */
-}
-/* extra*/
-.benefits .card {
- border: none;
- transition: -webkit-transform 0.2s, transform 0.2s;
-}
-.benefits .card:hover {
- -webkit-transform: scale(1.02);
- transform: scale(1.02);
- -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.15);
- box-shadow: 0 0 10px rgba(0,0,0,0.15);
-}
+    /* Add any additional styles here */
+    header {
+      background-color: var(--primary-blue);
+      color: white;
+      padding: 2rem 1rem;
+      text-align: center;
+    }
+    header h1 {
+      margin-bottom: 0.5rem;
+    }
+    .navigation ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 1rem;
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+    }
+    .navigation a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .navigation a:hover {
+      text-decoration: underline;
+    }
+    /* Section layout */
+    section {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+    section h2 {
+      color: var(--primary-blue);
+      margin-bottom: 1rem;
+    }
+    section ul {
+      padding-left: 1.2rem;
+    }
+    section ul li {
+      margin-bottom: 0.5rem;
+    }
+    .alphabet {
+      background: #e6f0ff;
+      padding: 1rem;
+      font-size: 1.2rem;
+      letter-spacing: 0.2rem;
+      text-align: center;
+      border-radius: 6px;
+      margin-top: 1rem;
+    }
+    .site-footer {
+      background-color: #adade6; /* light blue */ 
+      color: #000000;            /* black text */
+      text-align: center;
+      padding: 1.5rem 1rem;
+      margin-top: 3rem;
+      font-size: 1rem;
+      border-top: 2px solid #ccc; /* optional: subtle border */
+    }
+    /* extra*/
+    .benefits .card {
+      border: none;
+      transition: -webkit-transform 0.2s, transform 0.2s;
+    }
+    .benefits .card:hover {
+      -webkit-transform: scale(1.02);
+      transform: scale(1.02);
+      -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.15);
+      box-shadow: 0 0 10px rgba(0,0,0,0.15);
+    }
+    

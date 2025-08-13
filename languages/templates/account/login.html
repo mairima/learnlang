@@ -1,12 +1,13 @@
-    {% extends "base.html" %}
+    {% extends "account/base.html" %}
     {% load i18n %}
 
     {% block title %}{% trans "Sign In" %}{% endblock %}
 
-    {% block content %}
-    <div class="container mt-4" style="max-width: 500px;">
+    {% block inner %}
+    <div class="container mt-4" style="max-width: 520px;">
     <h2 class="mb-3 text-center">{% trans "Sign In" %}</h2>
 
+    {# flash messages #}
     {% if messages %}
         {% for message in messages %}
         <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
@@ -16,26 +17,39 @@
         {% endfor %}
     {% endif %}
 
-    <form method="post" action="{% url 'account_login' %}">
+    {# any non-field errors from the form #}
+    {% if form.non_field_errors %}
+        <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+    {% endif %}
+
+    <form method="post" action="{% url 'account_login' %}" class="card p-3 shadow-sm">
         {% csrf_token %}
-        {{ form.as_p }}
+
+        <div class="mb-3">
+        <label class="form-label" for="{{ form.login.id_for_label }}">{% trans "Login" %}</label>
+        {{ form.login.as_widget(attrs={"class": "form-control", "placeholder": "Email or username", "autofocus": "autofocus"}) }}
+        {% if form.login.errors %}<div class="text-danger small mt-1">{{ form.login.errors|striptags }}</div>{% endif %}
+        </div>
+
+        <div class="mb-3">
+        <label class="form-label" for="{{ form.password.id_for_label }}">{% trans "Password" %}</label>
+        {{ form.password.as_widget(attrs={"class": "form-control", "placeholder": "Password", "autocomplete": "current-password"}) }}
+        {% if form.password.errors %}<div class="text-danger small mt-1">{{ form.password.errors|striptags }}</div>{% endif %}
+        </div>
+
+        {% if form.remember %}
+        <div class="form-check mb-3">
+            {{ form.remember.as_widget(attrs={"class": "form-check-input"}) }}
+            <label class="form-check-label" for="{{ form.remember.id_for_label }}">{% trans "Remember Me" %}</label>
+        </div>
+        {% endif %}
+
         <button type="submit" class="btn btn-primary w-100">{% trans "Sign In" %}</button>
+
+        <div class="d-flex justify-content-between mt-3">
+        <a href="{% url 'account_reset_password' %}">{% trans "Forgot your password?" %}</a>
+        <a href="{% url 'account_signup' %}">{% trans "Create an account" %}</a>
+        </div>
     </form>
-
-    <div class="d-flex justify-content-between mt-3">
-        <a href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
-    </div>
-
-    <hr class="my-4">
-
-    <div class="text-center">
-        <p class="mb-2">{% trans "Don't have an account?" %}</p>
-        <a href="{% url 'account_signup' %}?role=student" class="btn btn-outline-success me-2">
-        {% trans "Sign up as Student" %}
-        </a>
-        <a href="{% url 'account_signup' %}?role=tutor" class="btn btn-outline-info">
-        {% trans "Sign up as Tutor" %}
-        </a>
-    </div>
     </div>
     {% endblock %}

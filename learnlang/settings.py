@@ -23,8 +23,10 @@ if os.path.exists(os.path.join(BASE_DIR, "env.py")):
 # ------------------------------------------------------------------------------
 SECRET_KEY = os.getenv("SECRET_KEY", "KEY")  # set in Heroku config vars!
 
+
 def env_bool(name: str, default=False) -> bool:
     return str(os.getenv(name, str(default))).lower() in ("1", "true", "yes", "on")
+
 
 DEBUG = env_bool("DEBUG", True)
 
@@ -165,12 +167,16 @@ LOGIN_REDIRECT_URL = "after_login"  # your role-based router view
 LOGOUT_REDIRECT_URL = "account_login"
 SITE_ID = 1
 
-# New-style allauth settings (no deprecations)
-ACCOUNT_LOGIN_METHODS = {"username", "email"}
-ACCOUNT_SIGNUP_FIELDS = ["email*", "username*", "password1*", "password2*"]
+# Allow signup/login without email requirement
+ACCOUNT_EMAIL_REQUIRED = False
+ACCOUNT_USERNAME_REQUIRED = True
+ACCOUNT_AUTHENTICATION_METHOD = "username"
 ACCOUNT_EMAIL_VERIFICATION = "none"
 
-# Use custom signup form to collect role (student/tutor)
+# Signup form fields: username + password only
+ACCOUNT_SIGNUP_FIELDS = ["username*", "password1*", "password2*"]
+
+# Use custom signup form to collect role
 ACCOUNT_FORMS = {
     "signup": "languages.forms.RoleSignupForm",
 }
