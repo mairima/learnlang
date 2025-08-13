@@ -1,9 +1,11 @@
-from django.db import models
+from datetime import time as time_obj
+
 from django.conf import settings
+from django.db import models
 from django.contrib.auth import get_user_model
+from django.db.models import Q
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from datetime import time
 
 User = get_user_model()
 
@@ -36,35 +38,57 @@ class Exercise(models.Model):
 
 
 class Course(models.Model):
-    name = models.CharField(max_length=100)
+    title = models.CharField(max_length=200)
+    capacity = models.PositiveIntegerField(default=10)
+    start_date = models.DateField()
+    end_date = models.DateField()
+    # optional: course_type/level if your templates use them
+    # course_type = models.CharField(max_length=10, choices=(("MAIN","Main"),("TOEFL","TOEFL")), blank=True, default="MAIN")
+    # level = models.CharField(max_length=50, blank=True)
 
-    # Optional scheduling fields (use if you want real dates / weekend logic)
-    start_date = models.DateField(null=True, blank=True)
-    end_date = models.DateField(null=True, blank=True)
-    weekend_only = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
-    capacity = models.PositiveIntegerField(default=12)
+    class Meta:
+        ordering = ("start_date", "title")
 
     def __str__(self):
-        return self.name
+        return self.title
+
+    @property
+    def booked_count(self):
+        # Count only active/confirmed seats (adjust statuses as needed)
+        return self.bookings.filter(Q(status="CONFIRMED") | Q(status="PENDING")).count()
+
+    @property
+    def seats_left(self):
+        return max(self.capacity - self.booked_count, 0)
 
 
 class Booking(models.Model):
+    STATUS_CHOICES = (
+        ("PENDING", "Pending"),
+        ("CONFIRMED", "Confirmed"),
+        ("CANCELLED", "Cancelled"),
+    )
+
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="bookings"
     )
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="bookings")
+
     name = models.CharField(max_length=100, default="Guest")
     email = models.EmailField(blank=True, null=True)
+
     date = models.DateField(db_index=True)
-    time = models.TimeField(default=time(12, 0))  # Default: 12:00 PM
+    time = models.TimeField(default=time_obj(12, 0))  # Default: 12:00 PM
+
     message = models.TextField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)  # NEW
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="PENDING")
 
     class Meta:
         ordering = ("-created_at", "-id")
         constraints = [
-            models.UniqueConstraint(fields=["user", "course"], name="uniq_user_course")
+            models.UniqueConstraint(fields=["user", "course"], name="uniq_user_course"),
         ]
 
     def __str__(self):

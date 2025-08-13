@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 # If you're using django-allauth (you are), extend its SignupForm
 from allauth.account.forms import SignupForm as AllauthSignupForm
 
-from .models import Booking, Profile
+from .models import Booking, Profile, Course # Ensure Course is imported if used in BookingForm
 
 User = get_user_model()
 

@@ -2,6 +2,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 
+from django.db.models import Count, Q, F, IntegerField, Value
+from django.db.models.functions import Greatest
+
 from .models import Booking, Course, Profile
 from .forms import BookingForm
 
@@ -71,12 +74,28 @@ def post_login_redirect(request):
 # -----------------------------
 # Dashboards (role-protected)
 # -----------------------------
-from django.contrib.auth.decorators import user_passes_test  # make sure this import exists
-from .models import Course                                   # and this one too
-
 @user_passes_test(is_student)
 def student_dashboard(request):
-    active_courses = Course.objects.filter(is_active=True).order_by("start_date")
+    # No more is_active field; show all or add your own filter
+    active_courses = (
+        Course.objects
+        .annotate(
+            # avoid clashing with the @property booked_count on the model
+            booked_count_db=Count(
+                "bookings",
+                filter=Q(bookings__status__in=["CONFIRMED", "PENDING"]),
+                distinct=True,
+            )
+        )
+        .annotate(
+            seats_left_db=Greatest(
+                F("capacity") - F("booked_count_db"),
+                Value(0),
+                output_field=IntegerField(),
+            )
+        )
+        .order_by("start_date")
+    )
     return render(request, "dashboard/student_dashboard.html", {
         "active_courses": active_courses
     })
@@ -84,7 +103,6 @@ def student_dashboard(request):
 
 @user_passes_test(is_tutor)
 def tutor_dashboard(request):
-    # Your screenshot shows templates/dashboard/...
     return render(request, "dashboard/tutor_dashboard.html")
 
 
@@ -105,23 +123,21 @@ def book_tutor(request):
             booking.save()
             messages.success(request, "🎉 Booking submitted successfully!")
             return redirect("my_bookings")
-        else:
-            messages.error(request, "Please correct the errors below.")
+        messages.error(request, "Please correct the errors below.")
     else:
         form = BookingForm(user=request.user)
 
-    # No start_date on Course; order by name
-    courses = Course.objects.all().order_by("name")
+    # Course was renamed: order by title (not name)
+    courses = Course.objects.all().order_by("title")
     return render(request, "booking.html", {"form": form, "courses": courses})
 
 
-@login_required  # redirects to login if not authenticated
+@login_required
 def my_bookings_view(request):
-    # Model has no created_at; use newest first by id
     bookings = (
         Booking.objects.filter(user=request.user)
         .select_related("course")
-        .order_by("-id")
+        .order_by("-created_at", "-id")  # created_at exists on Booking
     )
     return render(request, "my_bookings.html", {"bookings": bookings})
 
@@ -135,8 +151,7 @@ def edit_booking_view(request, booking_id):
             form.save()
             messages.success(request, "Booking updated.")
             return redirect("my_bookings")
-        else:
-            messages.error(request, "Please fix the errors below.")
+        messages.error(request, "Please fix the errors below.")
     else:
         form = BookingForm(instance=booking, user=request.user)
     return render(request, "edit_booking.html", {"form": form, "booking": booking})

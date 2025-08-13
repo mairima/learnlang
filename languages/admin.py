@@ -14,7 +14,7 @@ class ExerciseAdmin(admin.ModelAdmin):
 
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
-    list_display = ('name', )
+    list_display = ('title', 'start_date', 'end_date', 'capacity')
 
 
 @admin.register(Booking)

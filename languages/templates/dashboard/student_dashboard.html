@@ -1,51 +1,43 @@
-    {% extends "base.html" %}
-    {% block title %}Student Dashboard{% endblock %}
-    {% block content %}
-    <div class="container mt-4">
-    <h2 class="mb-3">Student Dashboard</h2>
+{% extends "base.html" %}
+{% block title %}Student Dashboard{% endblock %}
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-3">Student Dashboard</h2>
 
-    <div class="mb-4">
-        <a class="btn btn-primary" href="{% url 'booking' %}">Book a course</a>
-        <a class="btn btn-outline-secondary" href="{% url 'my_bookings' %}">My bookings</a>
-    </div>
-
-    <h5>Active courses</h5>
-    {% if active_courses %}
+  <h5>Active courses</h5>
+  {% if active_courses %}
     <table class="table table-sm">
-        <thead>
-        <tr><th>Course</th><th>Dates</th><th>Seats left</th><th></th></tr>
-        </thead>
-        <tbody>
-        {% for c in active_courses %}
+      <thead>
         <tr>
-            <td>
-            {% if c.course_type == 'MAIN' %}{{ c.get_level_display }} – {% endif %}
-            {{ c.title }}
-            {% if c.course_type == 'TOEFL' %}<span class="badge bg-secondary ms-2">Weekend</span>{% endif %}
-            </td>
-            <td>{{ c.start_date }} → {{ c.end_date }}</td>
-            <td>{{ c.seats_left }} / {{ c.capacity }}</td>
-            <td><a class="btn btn-sm btn-success" href="{% url 'booking' %}">Book</a></td>
+          <th>Dates & Course</th>
+          <th>Seats left</th>
         </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-    {% else %}
-        <p class="text-muted">No active courses at the moment.</p>
-    {% endif %}
+      </thead>
+      <tbody>
+        {% for c in active_courses %}
+          <tr>
+            <td>
+              {{ c.start_date }} → {{ c.end_date }}
+              — <strong>{{ c.title }}</strong>
+              {% if c.course_type == 'MAIN' %} ({{ c.get_level_display }}){% endif %}
+              {% if c.course_type == 'TOEFL' %}
+                <span class="badge bg-secondary ms-2">Weekend</span>
+              {% endif %}
+            </td>
 
-    <h5 class="mt-4">Recent bookings</h5>
-    {% if my_bookings %}
-        <ul class="list-group">
-        {% for b in my_bookings %}
-        <li class="list-group-item">
-            {{ b.course }} — <strong>{{ b.status }}</strong>
-            <small class="text-muted"> ({{ b.created_at|date:"Y-m-d H:i" }})</small>
-        </li>
+            <td>
+              {% if c.seats_left|default:c.seats_left == 0 %}
+                <span class="badge bg-danger">Full</span>
+              {% else %}
+                {{ c.seats_left }} / {{ c.capacity }}
+              {% endif %}
+            </td>
+          </tr>
         {% endfor %}
-        </ul>
-    {% else %}
-        <p class="text-muted">You have no bookings yet.</p>
-    {% endif %}
-    </div>
-    {% endblock %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="text-muted">No active courses at the moment.</p>
+  {% endif %}
+</div>
+{% endblock %}
