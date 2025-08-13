@@ -49,10 +49,6 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
 
-    # Optional media backends (auto-enabled below if env present)
-    "cloudinary",
-    "cloudinary_storage",
-
     # Local apps
     "languages",
 ]
@@ -151,23 +147,6 @@ STORAGES = {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
-
-# ------------------------------------------------------------------------------
-# Optional Cloudinary media storage (auto-enable if creds available)
-# ------------------------------------------------------------------------------
-if os.getenv("CLOUDINARY_URL") or (
-    os.getenv("CLOUDINARY_CLOUD_NAME")
-    and os.getenv("CLOUDINARY_API_KEY")
-    and os.getenv("CLOUDINARY_API_SECRET")
-):
-    DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
-    CLOUDINARY_STORAGE = {
-        "CLOUD_NAME": os.getenv("CLOUDINARY_CLOUD_NAME"),
-        "API_KEY": os.getenv("CLOUDINARY_API_KEY"),
-        "API_SECRET": os.getenv("CLOUDINARY_API_SECRET"),
-    }
-    # Media URL will be served by Cloudinary; if you also support local dev media:
-    MEDIA_URL = "/media/"
 
 # ------------------------------------------------------------------------------
 # Auth / allauth
