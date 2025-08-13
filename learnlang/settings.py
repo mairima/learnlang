@@ -165,14 +165,14 @@ LOGIN_REDIRECT_URL = "after_login"  # your role-based router view
 LOGOUT_REDIRECT_URL = "account_login"
 SITE_ID = 1
 
-ACCOUNT_EMAIL_VERIFICATION = "none"   # change to 'optional'/'mandatory' if needed
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_AUTHENTICATION_METHOD = "username_email"
-ACCOUNT_USERNAME_REQUIRED = True
+# New-style allauth settings (no deprecations)
+ACCOUNT_LOGIN_METHODS = {"username", "email"}
+ACCOUNT_SIGNUP_FIELDS = ["email*", "username*", "password1*", "password2*"]
+ACCOUNT_EMAIL_VERIFICATION = "none"
 
-# Use a custom allauth signup form to collect role (student/tutor)
+# Use custom signup form to collect role (student/tutor)
 ACCOUNT_FORMS = {
-    "signup": "languages.forms.RoleSignupForm"
+    "signup": "languages.forms.RoleSignupForm",
 }
 
 # Messages

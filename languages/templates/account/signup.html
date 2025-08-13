@@ -1,10 +1,19 @@
-{% extends 'home.html' %}
-
+{% extends "base.html" %}
+{% block title %}Sign up{% endblock %}
 {% block content %}
-    <h2>Sign up</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Sign up</button>
-    </form>
+<div class="container mt-4">
+  <h2>Create your student account</h2>
+  <form method="post" action="{% url 'account_signup' %}">
+    {% csrf_token %}
+    {{ form.username.label_tag }} {{ form.username }}
+    {{ form.email.label_tag }} {{ form.email }}
+    {{ form.password1.label_tag }} {{ form.password1 }}
+    {{ form.password2.label_tag }} {{ form.password2 }}
+    
+    <!-- Hidden field to force role to "student" -->
+    <input type="hidden" name="role" value="student">
+    
+    <button class="btn btn-primary" type="submit">Sign up</button>
+</form>
+</div>
 {% endblock %}
