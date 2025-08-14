@@ -195,3 +195,7 @@ LOGGING = {
         "django.security": {"handlers": ["console"], "level": "ERROR", "propagate": True},
     },
 }
+
+
+# Allow embedding from anywhere (only for testing!)
+X_FRAME_OPTIONS = 'ALLOWALL'
