@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib import messages as dj_messages
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.utils import timezone  # needed for date logic in admin dashboard
 
@@ -69,7 +69,7 @@ def post_login_redirect(request):
     """
     Users land here after login (LOGIN_REDIRECT_URL = 'post_login_redirect').
     """
-    list(dj_messages.get_messages(request))
+    list(messages.get_messages(request))
     return redirect(login_redirect_by_role(request.user))
 
 
