@@ -126,3 +126,10 @@ button:hover {
       -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.15);
       box-shadow: 0 0 10px rgba(0,0,0,0.15);
     }
+    /* Navbar active link */
+  .navbar-nav .nav-link.active {
+  color: #fff !important;
+  background-color: #0d6efd !important; /* Bootstrap primary */
+  border-radius: .25rem;
+}
+
