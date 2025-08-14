@@ -10,7 +10,6 @@ from .models import Booking, Course, Profile
 from .forms import BookingForm
 from django.views.decorators.http import require_http_methods
 
-
 # -----------------------------
 # Home & simple content pages
 # -----------------------------

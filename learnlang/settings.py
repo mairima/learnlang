@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "django.contrib.sites",  # required by allauth
+    "django.contrib.sites",  # required by allauth,
+    "django_extensions",  # Django extensions for development
 
     # Third-party
     "allauth",
@@ -76,7 +77,7 @@ TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         # Add a top-level /templates dir if you have one:
-        "DIRS": [TEMPLATES_DIR],
+        "DIRS": [TEMPLATES_DIR], 
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
