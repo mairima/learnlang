@@ -74,22 +74,21 @@ Validate
 All tested pages returned "Document checking completed. No errors found" or only framework-related warnings (e.g., Bootstrap ARIA attributes), which were ignored as they are valid in this context.
 
 
-I have used the recommended [HTML W3C Validator](https://validator.w3.org) to validate all of my HTML files.
+I have used the recommended [HTML W3C Validator](https://validator.w3.org) to validate all of my HTML files. The pages were opened and then with a right click to open source code and the source code was used to enter a text validation in the w3 validator website, which all passed.
 
 | Directory | File | URL | Screenshot | Notes |
 | --- | --- | --- | --- | --- |
 | languages | [login.html](https://github.com/mairima/learnlang/blob/main/languages/templates/account/login.html) |  Link ([if applicable](https://learnlang-e0549c82066a.herokuapp.com/accounts/login/)) | ![screenshot](static/documentation/validation/htmlvalidator.png) | |
 | languages | [logout.html](https://github.com/mairima/learnlang/blob/main/languages/templates/account/logout.html) | | refer to login validation picture | |
-| languages | [signup.html](https://github.com/mairima/learnlang/blob/main/languages/templates/account/signup.html) | Link (if applicable) | refer to login validation picture |  |
-| languages | [booking.html](https://github.com/mairima/learnlang/blob/main/languages/templates/booking.html) | Link (if applicable) | refer to login validation picture |  |
-| languages | [booking_form.html](https://github.com/mairima/learnlang/blob/main/languages/templates/booking_form.html) | Link (if applicable) | refer to login validation picture  |  |
-| languages | [contact_us.html](https://github.com/mairima/learnlang/blob/main/languages/templates/contact_us.html) | Link (if applicable) | refer to login validation picture  |  |
-| languages | [edit_booking.html](https://github.com/mairima/learnlang/blob/main/languages/templates/edit_booking.html) |  Link (if applicable) | refer to login validation picture |  |
-| languages | [english.html](https://github.com/mairima/learnlang/blob/main/languages/templates/english.html) |  Link (if applicable) | refer to login validation picture |  |
-| languages | [home.html](https://github.com/mairima/learnlang/blob/main/languages/templates/home.html) |  Link (if applicable) |refer to login validation picture |  |
-| languages | [index.html](https://github.com/mairima/learnlang/blob/main/languages/templates/languages/index.html) |  Link (if applicable) | refer to login validation picture|  |
-| languages | [my_bookings.html](https://github.com/mairima/learnlang/blob/main/languages/templates/my_bookings.html) |  Link (if applicable) |refer to login validation picture|  |
-| languages | [tutor.html](https://github.com/mairima/learnlang/blob/main/languages/templates/tutor.html) |  Link (if applicable) |refer to login validation picture |  |
+| languages | [signup.html](https://github.com/mairima/learnlang/blob/main/languages/templates/account/signup.html) |Link  ([if applicable](https://learnlang-e0549c82066a.herokuapp.com/accounts/signup/booking/))| refer to login validation picture |  |
+| languages | [booking.html](https://github.com/mairima/learnlang/blob/main/languages/templates/booking.html) | Link  ([if applicable](https://learnlang-e0549c82066a.herokuapp.com/booking/)) | refer to login validation picture |  |
+| languages | [contact_us.html](https://github.com/mairima/learnlang/blob/main/languages/templates/contact_us.html) |  Link  ([if applicable](https://learnlang-e0549c82066a.herokuapp.com/contact/))| refer to login validation picture  |  |
+| languages | [edit_booking.html](https://github.com/mairima/learnlang/blob/main/languages/templates/edit_booking.html) |  Link  ([if applicable](https://learnlang-e0549c82066a.herokuapp.com/my-bookings/))| refer to login validation picture |  |
+| languages | [english.html](https://github.com/mairima/learnlang/blob/main/languages/templates/english.html) |  Link ([if applicable](https://learnlang-e0549c82066a.herokuapp.com/english/))| refer to login validation picture |  |
+| languages | [home.html](https://github.com/mairima/learnlang/blob/main/languages/templates/home.html) |  Link ([if applicable](https://learnlang-e0549c82066a.herokuapp.com/)) |refer to login validation picture |  |
+| languages | [index.html](https://github.com/mairima/learnlang/blob/main/languages/templates/languages/index.html) |  | refer to login validation picture|  |
+| languages | [my_bookings.html](https://github.com/mairima/learnlang/blob/main/languages/templates/my_bookings.html) |  Link ([if applicable](https://learnlang-e0549c82066a.herokuapp.com/booking/)) |refer to login validation picture|  |
+| languages | [tutor.html](https://github.com/mairima/learnlang/blob/main/languages/templates/tutor.html) |  Link ([if applicable](https://learnlang-e0549c82066a.herokuapp.com/get-tutor/)) |refer to login validation picture |  |
 | languages | [admin_dashboard.html](https://github.com/mairima/learnlang/blob/main/languages/templates/tutor.html) |  Link [if applicable](https://learnlang-e0549c82066a.herokuapp.com/dashboard/admin/) |refer to login validation picture |  |
 
 
@@ -99,12 +98,13 @@ I have used the recommended [CSS Jigsaw Validator](https://jigsaw.w3.org/css-val
 
 | Directory | File | URL | Screenshot | Notes |
 | --- | --- | --- | --- | --- |
-| static | [style.css](https://github.com/mairima/learnlang/blob/main/static/css/style.css) |  Link (if applicable) | ![screenshot](documentation/validation/css-static-style.png) |  Notes (if applicable) |
+| static | [style.css](https://github.com/mairima/learnlang/blob/main/static/css/style.css) |  Link (if applicable) | ![screenshot](static/documentation/validation/cssvalidated.png) |  |
 
 
 ### JavaScript
 
 I have used the recommended [JShint Validator](https://jshint.com) to validate my JS files.
+![screenshot](static/documentation/validation/jshinttest.png) 
 
 
 ### Python
@@ -113,7 +113,7 @@ I have used the recommended [PEP8 CI Python Linter](https://pep8ci.herokuapp.com
 
 | Directory | File | URL | Screenshot | Notes |
 | --- | --- | --- | --- | --- |
-| languages | [admin.py](https://github.com/mairima/learnlang/blob/main/languages/admin.py) | [PEP8 CI Link](https://pep8ci.herokuapp.com/https://raw.githubusercontent.com/mairima/learnlang/main/languages/admin.py) | ![screenshot](documentation/validation/py-languages-admin.png) | Notes (if applicable) |
+| languages | [admin.py](https://github.com/mairima/learnlang/blob/main/languages/admin.py) | [PEP8 CI Link](https://pep8ci.herokuapp.com/https://raw.githubusercontent.com/mairima/learnlang/main/languages/admin.py) | ![screenshot](static/documentation/validation/py-admin.png) | |
 | languages | [forms.py](https://github.com/mairima/learnlang/blob/main/languages/forms.py) | [PEP8 CI Link](https://pep8ci.herokuapp.com/https://raw.githubusercontent.com/mairima/learnlang/main/languages/forms.py) | ![screenshot](documentation/validation/py-languages-forms.png) | Notes (if applicable) |
 | languages | [models.py](https://github.com/mairima/learnlang/blob/main/languages/models.py) | [PEP8 CI Link](https://pep8ci.herokuapp.com/https://raw.githubusercontent.com/mairima/learnlang/main/languages/models.py) | ![screenshot](documentation/validation/py-languages-models.png) | Notes (if applicable) |
 | languages | [tests.py](https://github.com/mairima/learnlang/blob/main/languages/tests.py) | [PEP8 CI Link](https://pep8ci.herokuapp.com/https://raw.githubusercontent.com/mairima/learnlang/main/languages/tests.py) | ![screenshot](documentation/validation/py-languages-tests.png) | Notes (if applicable) |
