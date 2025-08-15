@@ -1,7 +1,5 @@
 from django.contrib import admin
 from .models import Lesson, Exercise, Course, Booking, ContactMessage
-
-
 @admin.register(Lesson)
 class LessonAdmin(admin.ModelAdmin):
     list_display = ('title', )
@@ -23,7 +21,7 @@ class BookingAdmin(admin.ModelAdmin):
 
 
 @admin.register(ContactMessage)
-    class ContactMessageAdmin(admin.ModelAdmin):
+class ContactMessageAdmin(admin.ModelAdmin):
         list_display = ('name', 'email', 'subject', 'created_at')
         search_fields = ('name', 'email', 'subject', 'message')
         list_filter = ('created_at',)
