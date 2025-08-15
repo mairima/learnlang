@@ -24,38 +24,38 @@
     </div>
   {% endif %}
 
-<form method="post">
+  <form method="post">
     {% csrf_token %}
 
     <div class="mb-3">
-  <label for="{{ form.course.id_for_label }}" class="form-label">Select a Course</label>
-  {{ form.course }}
-  {% if form.course.errors %}
-    <div class="text-danger small mt-1">{{ form.course.errors|striptags }}</div>
-  {% endif %}
-</div>
+      <label for="{{ form.course.id_for_label }}" class="form-label">Select a Course</label>
+      {{ form.course }}
+      {% if form.course.errors %}
+        <div class="text-danger small mt-1">{{ form.course.errors|striptags }}</div>
+      {% endif %}
+    </div>
 
+    {# Use form-rendered name so logged-in users see it prefilled #}
     <div class="mb-3">
-      <label for="id_name" class="form-label">Your Name</label>
-      <input type="text" class="form-control" id="id_name" name="name"
-            value="{{ form.name.value|default_if_none:'' }}" required>
+      {{ form.name.label_tag }}
+      {{ form.name }}
       {% if form.name.errors %}
         <div class="text-danger small mt-1">{{ form.name.errors|striptags }}</div>
       {% endif %}
     </div>
 
+    {# Email is required by the form for all users #}
     <div class="mb-3">
-      <label for="id_email" class="form-label">Email address</label>
-      <input type="email" class="form-control" id="id_email" name="email"
-            value="{{ form.email.value|default_if_none:'' }}">
+      {{ form.email.label_tag }}
+      {{ form.email }}
       {% if form.email.errors %}
         <div class="text-danger small mt-1">{{ form.email.errors|striptags }}</div>
       {% endif %}
     </div>
 
     <div class="mb-3">
-      <label for="id_message" class="form-label">Additional Message</label>
-      <textarea class="form-control" id="id_message" name="message" rows="3">{{ form.message.value|default_if_none:'' }}</textarea>
+      {{ form.message.label_tag }}
+      {{ form.message }}
       {% if form.message.errors %}
         <div class="text-danger small mt-1">{{ form.message.errors|striptags }}</div>
       {% endif %}
