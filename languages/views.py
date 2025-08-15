@@ -8,7 +8,7 @@ from django.utils import timezone
 from django.db.models import Count, Q
 
 from .models import Booking, Course, Profile
-from .forms import BookingForm
+from .forms import BookingForm, ContactForm
 from django.views.decorators.http import require_http_methods
 
 
@@ -25,7 +25,22 @@ def english(request):
 
 
 def contact_us(request):
-    return render(request, "contact_us.html")
+        """
+    Contact page with feedback:
+        - GET: empty form
+        - POST: validate, save ContactMessage, show success and redirect (PRG)
+        Admins can read saved messages in Django Admin.
+        """
+        if request.method == "POST":
+            form = ContactForm(request.POST)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Your message has been received. An admin will review it shortly.")
+                return redirect("contact_us")
+            messages.error(request, "Please correct the errors below and resubmit.")
+        else:
+            form = ContactForm()
+        return render(request, "contact_us.html", {"form": form})
 
 
 # -----------------------------
@@ -56,14 +71,14 @@ def is_admin(user):
         return False
 
 
-def login_redirect_by_role(user) -> str:
-    """
-    After login:
-      - Admins -> admin dashboard
-      - Others -> home
-    """
-    _ensure_profile(user)  # keep ensuring profile exists
-    return "admin_dashboard" if is_admin(user) else "home"
+    def login_redirect_by_role(user) -> str:
+        """
+        After login:
+        - Admins -> admin dashboard
+        - Others -> home
+        """
+        _ensure_profile(user)  # keep ensuring profile exists
+        return "admin_dashboard" if is_admin(user) else "home"
 
 
 # -----------------------------
@@ -173,7 +188,8 @@ def book_tutor(request):
         if form.is_valid():
             booking = form.save(commit=False)
             booking.user = request.user
-            booking.name = request.user.username
+            # name is set inside BookingForm.save() for authenticated users;
+            # email is required by the form; just save the instance now.
             booking.save()
             messages.success(
                 request,
@@ -182,10 +198,11 @@ def book_tutor(request):
             return redirect("my_bookings")
         messages.error(request, "Please correct the errors below.")
     else:
-        form = BookingForm(
-            user=request.user,
-            initial={"name": request.user.username},
-        )
+        initial = {}
+            # Pre-fill email from the logged-in account for convenience; still required.
+            if getattr(request.user, "email", ""):
+                initial["email"] = request.user.email
+            form = BookingForm(user=request.user, initial=initial)
 
     courses = Course.objects.all().order_by("title")
     return render(request, "booking.html", {"form": form, "courses": courses})
