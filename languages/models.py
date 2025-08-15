@@ -139,7 +139,7 @@ class Profile(models.Model):
 
 
 @receiver(post_save, sender=UserModel)
-def create_profile(_sender, instance, created, **_kwargs):
+def create_profile(sender, instance, created, **kwargs):
     """Ensure every new user has a student profile."""
     if created:
         Profile.objects.get_or_create(
