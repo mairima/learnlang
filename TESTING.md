@@ -114,14 +114,14 @@ I have used the recommended [PEP8 CI Python Linter](https://pep8ci.herokuapp.com
 | Directory | File | URL | Screenshot | Notes |
 | --- | --- | --- | --- | --- |
 | languages | [admin.py](https://github.com/mairima/learnlang/blob/main/languages/admin.py) | [PEP8 CI Link](https://pep8ci.herokuapp.com/https://raw.githubusercontent.com/mairima/learnlang/main/languages/admin.py) | ![screenshot](static/documentation/validation/py-admin.png) | |
-| languages | [forms.py](https://github.com/mairima/learnlang/blob/main/languages/forms.py) | [PEP8 CI Link](https://pep8ci.herokuapp.com/https://raw.githubusercontent.com/mairima/learnlang/main/languages/forms.py) | ![screenshot](documentation/validation/py-languages-forms.png) | Notes (if applicable) |
-| languages | [models.py](https://github.com/mairima/learnlang/blob/main/languages/models.py) | [PEP8 CI Link](https://pep8ci.herokuapp.com/https://raw.githubusercontent.com/mairima/learnlang/main/languages/models.py) | ![screenshot](documentation/validation/py-languages-models.png) | Notes (if applicable) |
-| languages | [tests.py](https://github.com/mairima/learnlang/blob/main/languages/tests.py) | [PEP8 CI Link](https://pep8ci.herokuapp.com/https://raw.githubusercontent.com/mairima/learnlang/main/languages/tests.py) | ![screenshot](documentation/validation/py-languages-tests.png) | Notes (if applicable) |
-| languages | [urls.py](https://github.com/mairima/learnlang/blob/main/languages/urls.py) | [PEP8 CI Link](https://pep8ci.herokuapp.com/https://raw.githubusercontent.com/mairima/learnlang/main/languages/urls.py) | ![screenshot](documentation/validation/py-languages-urls.png) | Notes (if applicable) |
-| languages | [views.py](https://github.com/mairima/learnlang/blob/main/languages/views.py) | [PEP8 CI Link](https://pep8ci.herokuapp.com/https://raw.githubusercontent.com/mairima/learnlang/main/languages/views.py) | ![screenshot](documentation/validation/py-languages-views.png) | Notes (if applicable) |
-| learnlang | [settings.py](https://github.com/mairima/learnlang/blob/main/learnlang/settings.py) | [PEP8 CI Link](https://pep8ci.herokuapp.com/https://raw.githubusercontent.com/mairima/learnlang/main/learnlang/settings.py) | ![screenshot](documentation/validation/py-learnlang-settings.png) | Notes (if applicable) |
-| learnlang | [urls.py](https://github.com/mairima/learnlang/blob/main/learnlang/urls.py) | [PEP8 CI Link](https://pep8ci.herokuapp.com/https://raw.githubusercontent.com/mairima/learnlang/main/learnlang/urls.py) | ![screenshot](documentation/validation/py-learnlang-urls.png) | Notes (if applicable) |
-|  | [manage.py](https://github.com/mairima/learnlang/blob/main/manage.py) | [PEP8 CI Link](https://pep8ci.herokuapp.com/https://raw.githubusercontent.com/mairima/learnlang/main/manage.py) | ![screenshot](documentation/validation/py--manage.png) | Notes (if applicable) |
+| languages | [forms.py](https://github.com/mairima/learnlang/blob/main/languages/forms.py) | [PEP8 CI Link](https://pep8ci.herokuapp.com/https://raw.githubusercontent.com/mairima/learnlang/main/languages/forms.py) | ![screenshot](static/documentation/validation/pylinterpass.png) | |
+| languages | [models.py](https://github.com/mairima/learnlang/blob/main/languages/models.py) | [PEP8 CI Link](https://pep8ci.herokuapp.com/https://raw.githubusercontent.com/mairima/learnlang/main/languages/models.py) | refer to forms.py picture| |
+| languages | [tests.py](https://github.com/mairima/learnlang/blob/main/languages/tests.py) | [PEP8 CI Link](https://pep8ci.herokuapp.com/https://raw.githubusercontent.com/mairima/learnlang/main/languages/tests.py) | refer to forms.py picture |  |
+| languages | [urls.py](https://github.com/mairima/learnlang/blob/main/languages/urls.py) | [PEP8 CI Link](https://pep8ci.herokuapp.com/https://raw.githubusercontent.com/mairima/learnlang/main/languages/urls.py) | refer to forms.py picture | |
+| languages | [views.py](https://github.com/mairima/learnlang/blob/main/languages/views.py) | [PEP8 CI Link](https://pep8ci.herokuapp.com/https://raw.githubusercontent.com/mairima/learnlang/main/languages/views.py) | refer to forms.py picture ||
+| learnlang | [settings.py](https://github.com/mairima/learnlang/blob/main/learnlang/settings.py) | [PEP8 CI Link](https://pep8ci.herokuapp.com/https://raw.githubusercontent.com/mairima/learnlang/main/learnlang/settings.py) | refer to forms.py picture ||
+| learnlang | [urls.py](https://github.com/mairima/learnlang/blob/main/learnlang/urls.py) | [PEP8 CI Link](https://pep8ci.herokuapp.com/https://raw.githubusercontent.com/mairima/learnlang/main/learnlang/urls.py) | refer to forms.py picture ||
+| learnlang  | [manage.py](https://github.com/mairima/learnlang/blob/main/manage.py) | [PEP8 CI Link](https://pep8ci.herokuapp.com/https://raw.githubusercontent.com/mairima/learnlang/main/manage.py) | refer to forms.py picture | |
 
 ## Responsiveness
 
@@ -130,15 +130,13 @@ I have tested the responsiveness on these devices and all works well:
 - Mobile
 - Tablet
 - Desktop
+- 
 | Page | Mobile | Tablet | Desktop | Notes |
 | --- | --- | --- | --- | --- |
-| Register | ![screenshot](documentation/responsiveness/mobile-register.png) | ![screenshot](documentation/responsiveness/tablet-register.png) | ![screenshot](documentation/responsiveness/desktop-register.png) | Works as expected |
-| Login | ![screenshot](documentation/responsiveness/mobile-login.png) | ![screenshot](documentation/responsiveness/tablet-login.png) | ![screenshot](documentation/responsiveness/desktop-login.png) | Works as expected |
-| Home | ![screenshot](documentation/responsiveness/mobile-home.png) | ![screenshot](documentation/responsiveness/tablet-home.png) | ![screenshot](documentation/responsiveness/desktop-home.png) | Works as expected |
-| Add Blog | ![screenshot](documentation/responsiveness/mobile-add-blog.png) | ![screenshot](documentation/responsiveness/tablet-add-blog.png) | ![screenshot](documentation/responsiveness/desktop-add-blog.png) | Works as expected |
-| Edit Blog | ![screenshot](documentation/responsiveness/mobile-edit-blog.png) | ![screenshot](documentation/responsiveness/tablet-edit-blog.png) | ![screenshot](documentation/responsiveness/desktop-edit-blog.png) | Works as expected |
-| Blog Post | ![screenshot](documentation/responsiveness/mobile-blog-post.png) | ![screenshot](documentation/responsiveness/tablet-blog-post.png) | ![screenshot](documentation/responsiveness/desktop-blog-post.png) | Works as expected |
-| 404 | ![screenshot](documentation/responsiveness/mobile-404.png) | ![screenshot](documentation/responsiveness/tablet-404.png) | ![screenshot](documentation/responsiveness/desktop-404.png) | Works as expected |
+| Register | ![screenshot](static/documentation/responsiveness/register-mobileres.png) | ![screenshot](static/documentation/responsiveness/register-tablet-res.png) | ![screenshot](static/documentation/responsiveness/register-desktopres.png) | Works as expected |
+| Home | ![screenshot](static/documentation/responsiveness/home-mobile.png) | ![screenshot](static/documentation/responsiveness/home-tablet.png) | ![screenshot](static/documentation/responsiveness/home-desktop.png) | Works as expected |
+| Admin page | ![screenshot](static/documentation/responsiveness/admin-mobileres.png) | ![screenshot](static/documentation/responsiveness/admin-tabletres.png) | ![screenshot](static/documentation/responsiveness/admin-desktopres.png) | Works as expected |
+
 
 ## Browser Compatibility
 
@@ -150,52 +148,55 @@ I've tested my deployed project on multiple browsers to check for compatibility 
 
 | Page | Chrome | Firefox | Safari | Notes |
 | --- | --- | --- | --- | --- |
-| Register | ![screenshot](documentation/browsers/chrome-register.png) | ![screenshot](documentation/browsers/firefox-register.png) | ![screenshot](documentation/browsers/safari-register.png) | Works as expected |
-| Login | ![screenshot](documentation/browsers/chrome-login.png) | ![screenshot](documentation/browsers/firefox-login.png) | ![screenshot](documentation/browsers/safari-login.png) | Works as expected |
-| Home | ![screenshot](documentation/browsers/chrome-home.png) | ![screenshot](documentation/browsers/firefox-home.png) | ![screenshot](documentation/browsers/safari-home.png) | Works as expected |
-| Add Blog | ![screenshot](documentation/browsers/chrome-add-blog.png) | ![screenshot](documentation/browsers/firefox-add-blog.png) | ![screenshot](documentation/browsers/safari-add-blog.png) | Works as expected |
-| Edit Blog | ![screenshot](documentation/browsers/chrome-edit-blog.png) | ![screenshot](documentation/browsers/firefox-edit-blog.png) | ![screenshot](documentation/browsers/safari-edit-blog.png) | Works as expected |
-| Blog Post | ![screenshot](documentation/browsers/chrome-blog-post.png) | ![screenshot](documentation/browsers/firefox-blog-post.png) | ![screenshot](documentation/browsers/safari-blog-post.png) | Works as expected |
-| 404 | ![screenshot](documentation/browsers/chrome-404.png) | ![screenshot](documentation/browsers/firefox-404.png) | ![screenshot](documentation/browsers/safari-404.png) | Works as expected |
+| Register | refer to responsiveness section, the test default browser is chrome| ![screenshot](static/documentation/browser/register-firefox.png) | ![screenshot](static/documentation/browser/signup-safari.jpeg) | Works as expected |
+| Login | refer to responsiveness section, the test default browser is chrome |same as register above | same as register above | Works as expected |
+| Home | refer to responsiveness section, the test default browser is chrome | same as register above  | same as register above | Works as expected |
+| 404 | refer to readme features |same as register above  | same as register above | Works as expected |
 
 ## Lighthouse Audit
 
 I've tested my deployed project using the Lighthouse Audit tool to check for any major issues. Some warnings are outside of my control, and mobile results tend to be lower than desktop.
 
-| Page | Mobile | Desktop |
+| Page | Desktop | Mobile |
 | --- | --- | --- |
-| Register | ![screenshot](documentation/lighthouse/mobile-register.png) | ![screenshot](documentation/lighthouse/desktop-register.png) |
-| Login | ![screenshot](documentation/lighthouse/mobile-login.png) | ![screenshot](documentation/lighthouse/desktop-login.png) |
-| Home | ![screenshot](documentation/lighthouse/mobile-home.png) | ![screenshot](documentation/lighthouse/desktop-home.png) |
-| Add Blog | ![screenshot](documentation/lighthouse/mobile-add-blog.png) | ![screenshot](documentation/lighthouse/desktop-add-blog.png) |
-| Edit Blog | ![screenshot](documentation/lighthouse/mobile-edit-blog.png) | ![screenshot](documentation/lighthouse/desktop-edit-blog.png) |
-| Blog Post | ![screenshot](documentation/lighthouse/mobile-blog-post.png) | ![screenshot](documentation/lighthouse/desktop-blog-post.png) |
-| 404 | ![screenshot](documentation/lighthouse/mobile-404.png) | ![screenshot](documentation/lighthouse/desktop-404.png) |
+| Register | ![screenshot](static/documentation/lighthouse/register-lighthouse.png) | ![screenshot](static/documentation/lighthouse/register-mobile-li.png) |
+| Booking| ![screenshot](static/documentation/lighthouse/book-desk-li.png) | ![screenshot](static/documentation/lighthouse/book-mob-li.png) |
+| Home | ![screenshot](static/documentation/lighthouse/home-desk-li.png) | ![screenshot](static/documentation/lighthouse/home-mob-li.png) |
+| Admindashbaord | ![screenshot](static/documentation/lighthouse/admindash-desk-li.png) | same as desktop |
+| Adminpage | ![screenshot](static/documentation/lighthouse/admindash-desk-li.png) | same as desktop |
+
 
 ## Defensive Programming
 
 Defensive programming was manually tested with the below user acceptance testing:
+Here, the following were tested:
+Users cannot submit an empty form (the `required` attribute was added in signup, login, so that the booking is identified by the logged in user)
+- Users must enter valid field types (the correct input `type=""` is used)
+- Users cannot brute-force a URL to navigate to a restricted pages
+
+- Users cannot perform CRUD functionality if not authenticated (if login functionality exists)
+- User-A should not be able to manipulate data belonging to User-B, or vice versa
+- Non-Authenticated users should not be able to access pages that require authentication
+- Standard users should not be able to access pages intended for superusers/admins
+
 
 | Page | Expectation | Test | Result | Screenshot |
 | --- | --- | --- | --- | --- |
-| Blog Management | Feature is expected to allow the blog owner to create new posts with a title, featured image, and content. | Created a new post with valid title, image, and content data. | Post was created successfully and displayed correctly in the blog. | ![screenshot](documentation/defensive/create-post.png) |
-| | Feature is expected to allow the blog owner to update existing posts. | Edited the content of an existing blog post. | Post was updated successfully with the new content. | ![screenshot](documentation/defensive/update-post.png) |
-| | Feature is expected to allow the blog owner to delete blog posts. | Attempted to delete a blog post, confirming the action before proceeding. | Blog post was deleted successfully. | ![screenshot](documentation/defensive/delete-post.png) |
-| | Feature is expected to retrieve a list of all published posts. | Accessed the blog owner dashboard to view all published posts. | All published posts were displayed in a list view. | ![screenshot](documentation/defensive/published-posts.png) |
-| | Feature is expected to preview posts as drafts before publishing. | Created a draft post and previewed it. | Draft was displayed correctly in preview mode. | ![screenshot](documentation/defensive/preview-draft.png) |
-| Comments Management | Feature is expected to allow the blog owner to approve or reject comments. | Approved and rejected comments from the dashboard. | Approved comments were published; rejected comments were removed. | ![screenshot](documentation/defensive/review-comments.png) |
-| | Feature is expected to allow the blog owner to edit or delete comments. | Edited and deleted existing comments. | Comments were updated or removed successfully. | ![screenshot](documentation/defensive/edit-delete-comments.png) |
-| User Authentication | Feature is expected to allow registered users to log in to the site. | Attempted to log in with valid and invalid credentials. | Login was successful with valid credentials; invalid credentials were rejected. | ![screenshot](documentation/defensive/login.png) |
-| | Feature is expected to allow users to register for an account. | Registered a new user with unique credentials. | User account was created successfully. | ![screenshot](documentation/defensive/register.png) |
-| | Feature is expected to allow users to log out securely. | Logged out and tried accessing a restricted page. | Access was denied after logout, as expected. | ![screenshot](documentation/defensive/logout.png) |
-| User Comments | Feature is expected to allow registered users to leave comments on blog posts. | Logged in and added comments to a blog post. | Comments were successfully added and marked as pending approval. | ![screenshot](documentation/defensive/add-comment.png) |
-| | Feature is expected to display a notification that comments are pending approval. | Added a comment and checked the notification message. | Notification was displayed as expected. | ![screenshot](documentation/defensive/pending-approval.png) |
-| | Feature is expected to allow users to edit their own comments. | Edited personal comments. | Comments were updated as expected. | ![screenshot](documentation/defensive/edit-user-comments.png) |
-| | Feature is expected to allow users to delete their own comments. | Deleted personal comments. | Comments were removed as expected. | ![screenshot](documentation/defensive/delete-user-comments.png) |
-| Guest Features | Feature is expected to allow guest users to read blog posts without registering. | Opened blog posts as a guest user. | Blog posts were fully accessible without logging in. | ![screenshot](documentation/defensive/view-posts-guest.png) |
-| | Feature is expected to display the names of other commenters on posts. | Checked the names of commenters on posts as a guest user. | Commenter names were displayed as expected. | ![screenshot](documentation/defensive/commenter-names.png) |
-| | Feature is expected to block standard users from brute-forcing admin pages. | Attempted to navigate to admin-only pages by manipulating the URL (e.g., `/admin`). | Access was blocked, and a message was displayed showing denied access. | ![screenshot](documentation/defensive/brute-force.png) |
-| 404 Error Page | Feature is expected to display a 404 error page for non-existent pages. | Navigated to an invalid URL (e.g., `/test`). | A custom 404 error page was displayed as expected. | ![screenshot](documentation/defensive/404.png) |
+| Signup | Creates account with strong password | Submit email(optional), username, and strong password; confirm redirect/notice | from the allauth, prompt for strong and consistent password as expected, and all other checks | ![screenshot](static/documentation/defensive/signup-df.png) |
+| Signup | Rejects weak password | Use weak password (e.g., `12345678`) | Result as above |Result as above |
+| Signup | Rejects password mismatch | Enter different password & confirm | Result as above | Result as above |
+| Signup | Rejects duplicate name | login with an existing user | Result as above| ![screenshot](static/documentation/defensive/signup-dubbleuser-error.png) |
+| Signup | Escapes unsafe input (XSS) | Username: `<script>alert(1)</script>`; view profile/header | Result as above | ![screenshot](static/documentation/defensive/signin-escape-df.png) |
+| Signin | Valid credentials log in and redirect correctly | Login and verify `post_login_redirect` target |Result as above | Refer to home browser section |
+| Signin | Wrong credentials show generic error | Right name + wrong password | Result as above | ![screenshot](static/documentation/defensive/signin-wrong-userinput-def.png) |
+| Booking | Happy path creates booking | Pick course, submit; appears in **My Bookings** | Works as expected, successful bookings are listed on my bookings| ![screenshot](static/documentation/defensive/book-ok-df.png) |
+| Booking | Email format validated (if provided) | Enter `not-an-email` |Valid| ![screenshot](static/documentation/defensive/emailvalidate-df.png) |
+| Booking | Duplicate booking prevented | Book same course twice (user+course unique) | Valid | ![screenshot](static/documentation/defensive/dupbook-error-df.png) |
+| Contact Us | Happy path sends/records message | Fill name/email/message; confirm success UI | Works as expected | ![screenshot](static/documentation/defensive/contactvalid.png) |
+| Contact Us | Required fields enforced, Email format validated | Submit empty name/message | Valid Email & format must be entered| ![screenshot](static/documentation/defensive/contact-emailrequired-df.png) |
+|Admin| Only admins can reach `/dashboard/admin/` | Log in as non-admin → visit URL directly; expect redirect to `home` | Works as expected | ![screenshot](static/documentation/defensive/nonadmin-redirecthome.png) |
+|Admin| Admins can reach dashboard and backend admin page| Log in as staff/superuser or role=`admin` → visit URL | Works as expected | ![screenshot](static/documentation/defensive/adminaccesstoadmin-df.png) ![screenshot](static/documentation/defensive/adminsite-df.png)|
+
 
 ## User Story Testing
 
@@ -212,10 +213,42 @@ Defensive programming was manually tested with the below user acceptance testing
 
 ### Python (Unit Testing)
 
-
-## Bugs
-
 ### Fixed Bugs
+
+When testing with the validators: I found some errors that i fixed, for example: 
+
+1. Trailing Slash Warning in HTML and some python syntax for example % sign, on the booking, contact and signup page.
+
+solution: 
+
+I opened the page as "view source code" & copied all the code an dthen it could validate in html. 
+
+2. CSS/JS not loading after deploy.
+The cause was that WhiteNoise wasn’t configured properly, or collectstatic wasn’t run.
+
+solution: 
+
+Added WhiteNoise to MIDDLEWARE after SecurityMiddleware.
+set: STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+ran: python manage.py collectstatic
+
+3. Some PEP 8 / Flake8 Warnings in settings.py
+   
+Solution: 
+
+Added spaces around operators.
+
+Broke long strings and dict entries across lines.
+
+The signup and login pages didn't extend the bootstrap and css styling to match the other pages. The cause was that, It had no {% load static %} or Bootstrap <link> tags, so it wasn’t inheriting the navbar, footer, or styles.
+It was an HTML file without a proper Django template extending the main layout. It needed to have: 
+
+a shared navbar/footer from base.html,
+a linked Bootstrap CSS and site styles.
+a consistent container/padding.
+
+The fix was to make the signup.html to extend the base.html and put its content in the {% block content %} section.
+
 
 ### Known Issues
 | Issue | 

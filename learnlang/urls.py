@@ -20,8 +20,8 @@ from django.urls import path, include
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("accounts/", include("allauth.urls")),  # folder path: templates/
-    #account/login.html. allauth: login/signup/logout/password flows
-    path("", include("languages.urls")),  # app routes (home, 
-    #english, booking, dashboards, etc.)
+    # Allauth auth endpoints (login, signup, logout, password flows)
+    path("accounts/", include("allauth.urls")),
+    # App routes: home, english, booking, dashboards, etc
+    path("", include("languages.urls")),
 ]
