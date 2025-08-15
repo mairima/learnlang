@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-
 {% load i18n %}
 
 {% block head_title %}{% trans "Signup" %}{% endblock head_title %}
@@ -11,11 +10,31 @@
 
 <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
   {% csrf_token %}
-  {{ form.as_p }}
+
+  {# Replace {{ form.as_p }} with a valid, minimal loop #}
+  {% for field in form %}
+    <div class="mb-3">
+      <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+      {{ field }}
+
+      {# Help text may include <ul>, so wrap it in a block element (valid HTML) #}
+      {% if field.help_text %}
+        <div id="{{ field.id_for_label }}_helptext" class="form-text">
+          {{ field.help_text|safe }}
+        </div>
+      {% endif %}
+
+      {# Keep default error markup; strip tags if you want plain text #}
+      {% if field.errors %}
+        {{ field.errors }}
+      {% endif %}
+    </div>
+  {% endfor %}
+
   {% if redirect_field_value %}
-  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}">
   {% endif %}
+
   <button type="submit">{% trans "Sign Up" %} &raquo;</button>
 </form>
-
 {% endblock content %}
