@@ -90,8 +90,10 @@ class Booking(models.Model):
         related_name="bookings",
     )
 
-    name = models.CharField(max_length=100, default="Guest")
-    email = models.EmailField(blank=True, null=True)
+# Mandatory: set 'name' from logged-in user in the form/save flow
+    name = models.CharField(max_length=100) 
+# Mandatory: required in form and at the model level
+    email = models.EmailField()
 
     message = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -146,3 +148,18 @@ def create_profile(sender, instance, created, **kwargs):
             user=instance,
             defaults={"role": "student"},
         )
+
+# Contact / Support inbox
+    class ContactMessage(models.Model):
+        """Contact-us submissions visible in Django Admin."""
+        name = models.CharField(max_length=255)
+        email = models.EmailField()
+        subject = models.CharField(max_length=255)
+        message = models.TextField()
+        created_at = models.DateTimeField(auto_now_add=True)
+    
+        class Meta:
+            ordering = ("-created_at",)
+    
+        def __str__(self) -> str:
+            return f"{self.name} — {self.subject} ({self.created_at:%Y-%m-%d})"
