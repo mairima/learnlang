@@ -18,7 +18,28 @@
     <ul class="list-group">
       {% for booking in bookings %}
         <li class="list-group-item">
-          <strong>{{ booking.course.name }}</strong> — {{ booking.date }}
+          <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
+              <div>
+                <strong>{{ booking.course.title }}</strong>
+                <div class="text-muted small">
+                  {{ booking.course.start_date|date:"Y-m-d" }} &rarr; {{ booking.course.end_date|date:"Y-m-d" }}
+                </div>
+                <div class="small mt-1">
+                  Student: <strong>{{ booking.name }}</strong>
+                  &nbsp;•&nbsp; Email: <span>{{ booking.email }}</span>
+                </div>
+              </div>
+              <div class="mt-2 mt-md-0">
+                <span class="badge {% if booking.status == 'CONFIRMED' %}bg-success{% elif booking.status == 'PENDING' %}bg-warning text-dark{% else %}bg-secondary{% endif %}">
+                  {{ booking.get_status_display }}
+                </span>
+              </div>
+            </div>
+  
+            <div class="text-muted small mt-2">
+              Booked on: {{ booking.created_at|date:"Y-m-d H:i" }}
+            </div>
+
           <div class="mt-2">
             <a href="{% url 'edit_booking' booking.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
             <a href="{% url 'delete_booking' booking.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
