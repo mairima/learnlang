@@ -26,7 +26,7 @@ class BookingForm(forms.ModelForm):
     Booking form for Booking model (no date/time fields).
     - Orders course dropdown by start_date then title
     - Validates: a user can't book the same course twice
-    - For authenticated users: hide name field and set it automatically
+    - For authenticated users: show name prefilled (not hidden)
     """
     class Meta:
         model = Booking
@@ -64,11 +64,11 @@ class BookingForm(forms.ModelForm):
         # Email is mandatory for everyone
         self.fields["email"].required = True
 
-        # If a user is logged in, do NOT ask for name again.
+        # If a user is logged in, prefill name and email (do not hide the name field)
         if self.user and getattr(self.user, "is_authenticated", False):
-            # remove name from rendered form; we'll set it in save()
-            self.fields.pop("name")
-            # prefill email from account for convenience (still required)
+            display_name = _display_name_for(self.user)
+            if display_name and "name" not in self.initial:
+                self.initial["name"] = display_name
             if getattr(self.user, "email", "") and "email" not in self.initial:
                 self.initial["email"] = self.user.email
 
@@ -86,9 +86,10 @@ class BookingForm(forms.ModelForm):
         return cleaned
 
     def save(self, commit=True):
-        """Ensure 'name' is always set from logged-in user; email remains required."""
+        """Ensure 'name' is set from logged-in user; email remains required."""
         booking = super().save(commit=False)
         if self.user and getattr(self.user, "is_authenticated", False):
+            # Persist authoritative account name regardless of form edits
             booking.name = _display_name_for(self.user)
         if commit:
             booking.save()
