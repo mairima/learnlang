@@ -19,16 +19,32 @@ class BookingForm(forms.ModelForm):
         model = Booking
         fields = ["course", "name", "email", "message"]
         widgets = {
-            "name": forms.TextInput(attrs={"class": "form-control", "placeholder": "Your name"}),
-            "email": forms.EmailInput(attrs={"class": "form-control", "placeholder": "Email address (optional)"}),
-            "message": forms.Textarea(attrs={"class": "form-control", "rows": 3, "placeholder": "Anything you'd like to add?"}),
+         "name": forms.TextInput(
+          attrs={
+            "class": "form-control",
+            "placeholder": "Your name",
+          }
+         ),
+         "email": forms.EmailInput(
+          attrs={
+            "class": "form-control",
+            "placeholder": "Email address (optional)",
+          }
+         ),
+         "message": forms.Textarea(
+          attrs={
+            "class": "form-control",
+            "rows": 3,
+            "placeholder": "Anything you'd like to add?",
+          }
+         ),
         }
 
     def __init__(self, *args, user=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.user = user  # set by the view
         # Populate & order the course select
-        self.fields["course"].queryset = Course.objects.order_by("start_date", "title")
+        self.fields["course"].queryset = Course.objects.order_by("start_date", "title")  # noqa
         self.fields["course"].widget.attrs.update({"class": "form-select"})
 
     def clean(self):
