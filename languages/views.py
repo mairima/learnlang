@@ -181,22 +181,36 @@ def admin_dashboard(request):
 def book_tutor(request):
     """
     Book a tutor:
-    - GET → show form with email pre-filled if logged in
-    - POST → save booking
+    - GET → show form with name/email pre-filled if logged in
+    - POST → validate (email required) and save booking
     """
     if request.method == "POST":
         form = BookingForm(request.POST, user=request.user)
+
+        # If email is missing, add a field error and re-render (do not redirect).
+        email_value = (request.POST.get("email") or "").strip()
+        if not email_value:
+            form.add_error("email", "This field is required.")
+            messages.error(request, "Please correct the errors below.")
+            courses = Course.objects.all().order_by("title")
+            return render(request, "booking.html", {"form": form, "courses": courses})
+
+        # Otherwise validate normally
         if form.is_valid():
             booking = form.save(commit=False)
             booking.user = request.user
             booking.save()
             messages.success(request, "🎉 Booking submitted successfully!")
             return redirect("my_bookings")
+
         messages.error(request, "Please correct the errors below.")
     else:
+        # Prefill both name & email for logged-in users (test expects name)
         initial = {}
-        if getattr(request.user, "email", ""):
-            initial["email"] = request.user.email
+        if request.user.is_authenticated:
+            initial["name"] = request.user.get_full_name() or request.user.username
+            if getattr(request.user, "email", ""):
+                initial["email"] = request.user.email
         form = BookingForm(user=request.user, initial=initial)
 
     courses = Course.objects.all().order_by("title")
