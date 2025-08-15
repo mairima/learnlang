@@ -4,36 +4,45 @@ from . import views
 
 urlpatterns = [
     path("", views.home, name="home"),
-
-    # Content pages
     path("english/", views.english, name="english"),
-    path("get-tutor/", views.get_tutor, name="tutor"),
     path("contact/", views.contact_us, name="contact_us"),
 
     # Booking
-    path("booking/", views.book_tutor, name="booking"),
+    path("book/", views.book_tutor, name="book_tutor"),
+    path("book/", views.book_tutor, name="booking"),  # alias
+    path("tutor/", views.get_tutor, name="get_tutor"),
+    path("tutor/", views.get_tutor, name="tutor"),  # alias
     path("my-bookings/", views.my_bookings_view, name="my_bookings"),
     path(
-        "booking/<int:booking_id>/edit/",
+        "bookings/<int:booking_id>/edit/",
         views.edit_booking_view,
         name="edit_booking",
     ),
     path(
-        "booking/<int:booking_id>/delete/",
+        "bookings/<int:booking_id>/delete/",
         views.delete_booking_view,
         name="delete_booking",
     ),
 
-    # Auth routing
+    # Post-login & admin
     path("after-login/", views.post_login_redirect, name="after_login"),
-
-    # Admin dashboard
-    path("dashboard/admin/", views.admin_dashboard, name="admin_dashboard"),
-
-    # Override allauth password reset:
-    # show "contact admin" (no email sent)
+    #alias
+    path("after-login/", views.post_login_redirect, name="post_login_redirect"),
     path(
-        "accounts/password/reset/",
+        "admin-dashboard/",
+        views.admin_dashboard,
+        name="admin_dashboard",
+    ),
+    path("admin-dashboard/", views.admin_dashboard, name="admin_dashboard"),
+    # alias
+    path("admin-dashboard/", views.admin_dashboard, name="tutor_dashboard"),
+    # alias
+    path("admin-dashboard/", views.admin_dashboard, name="student_dashboard"),
+
+
+    # Password reset placeholder
+    path(
+        "account/password/reset/",
         views.admin_only_password_reset,
         name="account_reset_password",
     ),
