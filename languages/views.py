@@ -1,14 +1,16 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required, user_passes_test
-from django.utils import timezone  # needed for date logic in admin dashboard
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import user_passes_test
+# needed for date logic in admin dashboard
+from django.utils import timezone
 
-from django.db.models import Count, Q, F, IntegerField, Value
-from django.db.models.functions import Greatest
+from django.db.models import Count, Q
 
 from .models import Booking, Course, Profile
 from .forms import BookingForm
 from django.views.decorators.http import require_http_methods
+
 
 # -----------------------------
 # Home & simple content pages
@@ -31,15 +33,19 @@ def contact_us(request):
 # -----------------------------
 def _ensure_profile(user) -> Profile:
     """
-    Guarantee the user has a Profile. If missing (e.g., account created before
-    the signal existed), create one with a default role (kept as 'student' for compatibility).
+    Guarantee the user has a Profile. If missing (e.g., account created
+    before the signal existed), create one with a default role (kept as
+    'student' for compatibility).
     """
-    profile, _ = Profile.objects.get_or_create(user=user, defaults={"role": "student"})
+    profile, _ = Profile.objects.get_or_create(
+        user=user,
+        defaults={"role": "student"},
+    )
     return profile
 
 
 def is_admin(user):
-    """Admin = Django staff/superuser or profile.role == 'admin' (optional)."""
+    """Admin = staff/superuser or profile.role == 'admin' (optional)."""
     if not getattr(user, "is_authenticated", False):
         return False
     if user.is_staff or user.is_superuser:
@@ -93,12 +99,18 @@ def admin_dashboard(request):
     today = timezone.now().date()
 
     # Courses that have any booking (all time)
-    booked_course_ids = Booking.objects.values_list("course_id", flat=True).distinct()
+    booked_course_ids = (
+        Booking.objects.values_list("course_id", flat=True).distinct()
+    )
 
     # Active = has bookings OR is currently within dates
-    active_filters = Q(id__in=booked_course_ids) | Q(start_date__lte=today, end_date__gte=today)
+    active_filters = (
+        Q(id__in=booked_course_ids)
+        | Q(start_date__lte=today, end_date__gte=today)
+    )
 
-    # Use related_name 'bookings' (present in your model according to the error field list)
+    # Use related_name 'bookings' (present in your model according to the
+    # error field list)
     active_courses = (
         Course.objects.filter(active_filters)
         .annotate(total_bookings=Count("bookings"))
@@ -113,7 +125,7 @@ def admin_dashboard(request):
         .order_by("-id")
     )
 
-    # Previous bookings (latest first) — prefer created_at; fallback to id if not present
+    # Previous bookings (latest first) — prefer created_at; fallback to id
     try:
         previous_bookings = (
             Booking.objects.select_related("course", "user")
@@ -128,7 +140,8 @@ def admin_dashboard(request):
     # Overview stats
     total_courses = Course.objects.count()
     total_bookings = Booking.objects.count()
-    # If your Booking uses a different date field for scheduled time, change 'date' below
+    # If Booking uses a different date field for scheduled time, change
+    # 'date' below
     try:
         upcoming_bookings = Booking.objects.filter(date__gte=today).count()
     except Exception:
@@ -162,15 +175,16 @@ def book_tutor(request):
             booking.user = request.user
             booking.name = request.user.username
             booking.save()
-            messages.success(request, "🎉 Booking submitted successfully!")
+            messages.success(
+                request,
+                "🎉 Booking submitted successfully!",
+            )
             return redirect("my_bookings")
         messages.error(request, "Please correct the errors below.")
     else:
         form = BookingForm(
             user=request.user,
-            initial={
-                "name": request.user.username,
-            }
+            initial={"name": request.user.username},
         )
 
     courses = Course.objects.all().order_by("title")
@@ -179,7 +193,8 @@ def book_tutor(request):
 
 @login_required
 def get_tutor(request):
-    # If tutors are no longer used, you can safely remove this view and its URL/template.
+    # If tutors are no longer used, you can safely remove this view
+    # and its URL/template.
     return render(request, "tutor.html")
 
 
@@ -205,7 +220,11 @@ def edit_booking_view(request, booking_id):
         messages.error(request, "Please fix the errors below.")
     else:
         form = BookingForm(instance=booking, user=request.user)
-    return render(request, "edit_booking.html", {"form": form, "booking": booking})
+    return render(
+        request,
+        "edit_booking.html",
+        {"form": form, "booking": booking},
+    )
 
 
 @login_required
@@ -217,18 +236,22 @@ def delete_booking_view(request, booking_id):
         return redirect("my_bookings")
     return render(request, "delete_booking.html", {"booking": booking})
 
+
 # admin-only password reset view
 @require_http_methods(["GET", "POST"])
 def admin_only_password_reset(request):
     """
-    Replaces allauth's email-based reset. No email is sent.
-    Shows instructions to contact the administrator, and on POST
-    returns to the login page with an info message.
+    Replaces allauth's email-based reset. No email is sent. Shows instructions
+    to contact the administrator, and on POST returns to the login page with
+    an info message.
     """
     if request.method == "POST":
         messages.info(
             request,
-            "Password reset is handled by an administrator. Please contact us for assistance."
+            (
+                "Password reset is handled by an administrator. "
+                "Please contact us for assistance."
+            ),
         )
         return redirect("account_login")
 
@@ -237,4 +260,8 @@ def admin_only_password_reset(request):
         "contact_email": "info@learnlang.com",
         "contact_phone": "0049 123456",
     }
-    return render(request, "account/password_reset_disabled.html", context)
+    return render(
+        request,
+        "account/password_reset_disabled.html",
+        context,
+    )
