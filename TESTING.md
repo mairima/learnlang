@@ -209,10 +209,6 @@ Users cannot submit an empty form (the `required` attribute was added in signup,
 | As a logged-in user | I will like crud on the bookings, so that create i can view, edit,   | so that I can start learning English immediately. |Refer to the my booking page on the feature section in the Readme |
 
 
-## Automated Testing
-
-### Python (Unit Testing)
-
 ### Fixed Bugs
 
 When testing with the validators: I found some errors that i fixed, for example: 
