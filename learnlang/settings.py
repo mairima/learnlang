@@ -113,10 +113,25 @@ else:
 # Password validation
 
 AUTH_PASSWORD_VALIDATORS = [
-    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},  # noqa
+{
+    "NAME": (
+        "django.contrib.auth.password_validation."
+        "UserAttributeSimilarityValidator"
+    ),
+},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
-    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},  # noqa
-    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},  # noqa
+ {
+    "NAME": (
+        "django.contrib.auth.password_validation."
+        "CommonPasswordValidator"
+    ),
+},
+{
+    "NAME": (
+        "django.contrib.auth.password_validation."
+        "NumericPasswordValidator"
+    ),
+},  # noqa
 ]
 
 # I18N / TZ
@@ -133,7 +148,8 @@ STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # If you have a local "static" folder for source assets:
-STATICFILES_DIRS = [BASE_DIR / "static"] if (BASE_DIR / "static").exists() else []  # noqa
+STATIC_DIR = BASE_DIR / "static"
+STATICFILES_DIRS = [STATIC_DIR] if STATIC_DIR.exists() else []
 
 # New-style STORAGES (Django 4.2+)
 STORAGES = {
