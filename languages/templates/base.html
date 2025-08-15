@@ -1,136 +1,136 @@
-    <!DOCTYPE html>
-  {% load static %} 
-  {% load account %}
-  <html lang="{{ LANGUAGE_CODE|default:'en' }}">
-  <head>
-    <meta charset="UTF-8">
-    <title>{% block title %}LearnLang{% endblock %}</title>
+<!DOCTYPE html>
+{% load static %}
+{% load account %}
+<html lang="{{ LANGUAGE_CODE|default:'en' }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}LearnLang{% endblock %}</title>
 
-    <!-- Bootstrap (online) -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <!-- Bootstrap (online) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
 
-    <!-- Local custom CSS -->
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-  </head>
-  <body class="d-flex flex-column min-vh-100">
+  <!-- Local custom CSS -->
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="d-flex flex-column min-vh-100">
 
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="{% url 'home' %}">LearnLang</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
-          <span class="navbar-toggler-icon"></span>
-        </button>
+  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{% url 'home' %}">LearnLang</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          {% with current=request.resolver_match.url_name %}
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            {% if user.is_authenticated %}
-              {% if user.is_superuser %}
-                <li class="nav-item">
-                  <a class="nav-link {% if current == 'admin_dashboard' %}active{% endif %}" href="{% url 'admin_dashboard' %}">Dashboard</a>
-                </li>
-              {% endif %}
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        {% with current=request.resolver_match.url_name %}
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          {% if user.is_authenticated %}
+            {% if user.is_superuser %}
               <li class="nav-item">
-                <a class="nav-link {% if current == 'english' %}active{% endif %}" href="{% url 'english' %}">English Courses</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link {% if current == 'tutor' %}active{% endif %}" href="{% url 'tutor' %}">Get a Tutor</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link {% if current == 'booking' %}active{% endif %}" href="{% url 'booking' %}">Book Now</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link {% if current == 'my_bookings' %}active{% endif %}" href="{% url 'my_bookings' %}">My Bookings</a>
+                <a class="nav-link {% if current == 'admin_dashboard' %}active{% endif %}" href="{% url 'admin_dashboard' %}">Dashboard</a>
               </li>
             {% endif %}
             <li class="nav-item">
-              <a class="nav-link {% if current == 'contact_us' %}active{% endif %}" href="{% url 'contact_us' %}">Contact Us</a>
+              <a class="nav-link {% if current == 'english' %}active{% endif %}" href="{% url 'english' %}">English Courses</a>
             </li>
-          </ul>
-          {% endwith %}
-
-          {% if user.is_authenticated %}
-            <span class="navbar-text me-3">
-              Logged in as <strong>{% user_display user %}</strong>
-            </span>
-            <form method="post" action="{% url 'account_logout' %}" class="ms-0">
-              {% csrf_token %}
-              <button class="btn btn-outline-danger" type="submit">Logout</button>
-            </form>
-          {% else %}
-            <a href="{% url 'account_login' %}" class="btn btn-outline-primary ms-3">Log in</a>
-            <a href="{% url 'account_signup' %}" class="btn btn-outline-secondary ms-2">Sign up</a>
+            <li class="nav-item">
+              <a class="nav-link {% if current == 'tutor' %}active{% endif %}" href="{% url 'tutor' %}">Get a Tutor</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {% if current == 'book_tutor' or current == 'booking' %}active{% endif %}" href="{% url 'book_tutor' %}">Book Now</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {% if current == 'my_bookings' %}active{% endif %}" href="{% url 'my_bookings' %}">My Bookings</a>
+            </li>
           {% endif %}
-        </div>
-      </div>
-    </nav>
+          <li class="nav-item">
+            <a class="nav-link {% if current == 'contact_us' %}active{% endif %}" href="{% url 'contact_us' %}">Contact Us</a>
+          </li>
+        </ul>
+        {% endwith %}
 
-    <main class="container mt-4 flex-grow-1">
-      {% block content %}
-        {% if messages %}
-          <div class="container mt-3">
-            {% for message in messages %}
-              <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-              </div>
-            {% endfor %}
-          </div>
+        {% if user.is_authenticated %}
+          <span class="navbar-text me-3">
+            Logged in as <strong>{% user_display user %}</strong>
+          </span>
+          <form method="post" action="{% url 'account_logout' %}" class="ms-0">
+            {% csrf_token %}
+            <button class="btn btn-outline-danger" type="submit">Logout</button>
+          </form>
+        {% else %}
+          <a href="{% url 'account_login' %}" class="btn btn-outline-primary ms-3">Log in</a>
+          <a href="{% url 'account_signup' %}" class="btn btn-outline-secondary ms-2">Sign up</a>
         {% endif %}
-      {% endblock %}
-    </main>
+      </div>
+    </div>
+  </nav>
 
-    <!-- Scroll-to-top button -->
-    <button onclick="scrollToTop()" id="scrollToTopBtn" title="Go to top">↑</button>
-
-    <!--Footer-->
-    <footer class="mt-auto py-4 bg-light">
-      <div class="container">
-        <div class="row justify-content-center text-center text-md-start">
-          <div class="col-12 col-md-5 col-xl-4 mb-3">
-            <h5 class="sub-heading-color">Contact Info</h5>
-            <address>
-              <strong><i class="fa-solid fa-location-dot"></i> LEARNLANG</strong><br>
-              Seestr. 1<br>
-              Berlin, 13351
-            </address>
-            <p>
-              <i class="fa-solid fa-phone"></i> 0049 123456<br>
-              <i class="fa-regular fa-paper-plane"></i> info@learnlang.com
-            </p>
-            <div class="social-links mt-3">
-              <a href="https://www.instagram.com" target="_blank" aria-label="Instagram" rel="noopener">
-                <i class="fa-brands fa-instagram me-3"></i>
-              </a>
-              <a href="https://www.facebook.com" target="_blank" aria-label="Facebook" rel="noopener">
-                <i class="fa-brands fa-square-facebook me-3"></i>
-              </a>
-              <a href="https://www.x.com" target="_blank" aria-label="X" rel="noopener">
-                <i class="fa-brands fa-x-twitter"></i>
-              </a>
+  <main class="container mt-4 flex-grow-1">
+    {% block content %}
+      {% if messages %}
+        <div class="container mt-3">
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-          </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endblock %}
+  </main>
 
-          <div class="col-12 col-md-5 col-xl-4 mb-3">
-            <h5 class="sub-heading-color">Opening Times</h5>
-            <p>Monday – Friday: 9:00 AM – 6:00 PM</p>
-            <p>Saturday – Sunday: 9:00 AM – 1:00 PM & (On demand)</p>
+  <!-- Scroll-to-top button -->
+  <button onclick="scrollToTop()" id="scrollToTopBtn" title="Go to top">↑</button>
+
+  <!--Footer-->
+  <footer class="mt-auto py-4 bg-light">
+    <div class="container">
+      <div class="row justify-content-center text-center text-md-start">
+        <div class="col-12 col-md-5 col-xl-4 mb-3">
+          <h5 class="sub-heading-color">Contact Info</h5>
+          <address>
+            <strong><i class="fa-solid fa-location-dot"></i> LEARNLANG</strong><br>
+            Seestr. 1<br>
+            Berlin, 13351
+          </address>
+          <p>
+            <i class="fa-solid fa-phone"></i> 0049 123456<br>
+            <i class="fa-regular fa-paper-plane"></i> info@learnlang.com
+          </p>
+          <div class="social-links mt-3">
+            <a href="https://www.instagram.com" target="_blank" aria-label="Instagram" rel="noopener">
+              <i class="fa-brands fa-instagram me-3"></i>
+            </a>
+            <a href="https://www.facebook.com" target="_blank" aria-label="Facebook" rel="noopener">
+              <i class="fa-brands fa-square-facebook me-3"></i>
+            </a>
+            <a href="https://www.x.com" target="_blank" aria-label="X" rel="noopener">
+              <i class="fa-brands fa-x-twitter"></i>
+            </a>
           </div>
         </div>
 
-        <div class="text-center pt-3 border-top mt-3">
-          <p class="mb-0">&copy; 2025 LearnLang. Learn more, connect more.</p>
+        <div class="col-12 col-md-5 col-xl-4 mb-3">
+          <h5 class="sub-heading-color">Opening Times</h5>
+          <p>Monday – Friday: 9:00 AM – 6:00 PM</p>
+          <p>Saturday – Sunday: 9:00 AM – 1:00 PM & (On demand)</p>
         </div>
       </div>
-    </footer>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+      <div class="text-center pt-3 border-top mt-3">
+        <p class="mb-0">&copy; 2025 LearnLang. Learn more, connect more.</p>
+      </div>
+    </div>
+  </footer>
 
-    <!-- Font Awesome -->
-    <script src="https://kit.fontawesome.com/fa7e3e6dea.js" crossorigin="anonymous"></script>
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Scroll to top JS -->
-    <script src="{% static 'js/scroll.js' %}"></script>
-  </body>
-  </html>
+  <!-- Font Awesome -->
+  <script src="https://kit.fontawesome.com/fa7e3e6dea.js" crossorigin="anonymous"></script>
+
+  <!-- Scroll to top JS -->
+  <script src="{% static 'js/scroll.js' %}"></script>
+</body>
+</html>
