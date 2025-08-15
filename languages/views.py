@@ -1,46 +1,58 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.decorators import user_passes_test
-# needed for date logic in admin dashboard
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.utils import timezone
-
 from django.db.models import Count, Q
-
-from .models import Booking, Course, Profile
-from .forms import BookingForm, ContactForm
 from django.views.decorators.http import require_http_methods
 
+from .models import Booking, Course, Profile, ContactMessage
+from .forms import BookingForm, ContactForm
 
 # -----------------------------
 # Home & simple content pages
 # -----------------------------
 def home(request):
+    """Public home page."""
     return render(request, "home.html")
 
 
 def english(request):
-    """Make this @login_required if you want it private."""
+    """
+    English learning page.
+    Add @login_required if you want to restrict to logged-in users only.
+    """
     return render(request, "english.html")
 
 
 def contact_us(request):
-        """
-    Contact page with feedback:
-        - GET: empty form
-        - POST: validate, save ContactMessage, show success and redirect (PRG)
-        Admins can read saved messages in Django Admin.
-        """
-        if request.method == "POST":
-            form = ContactForm(request.POST)
-            if form.is_valid():
-                form.save()
-                messages.success(request, "Your message has been received. An admin will review it shortly.")
-                return redirect("contact_us")
-            messages.error(request, "Please correct the errors below and resubmit.")
-        else:
-            form = ContactForm()
-        return render(request, "contact_us.html", {"form": form})
+    """
+    Show the contact form, save submissions to ContactMessage,
+    and give user feedback. Admins can view messages in /admin/.
+    """
+    if request.method == "POST":
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            msg = form.save(commit=False)
+            # Attach logged-in user and backfill name/email if missing
+            if request.user.is_authenticated:
+                msg.user = request.user
+                if not msg.name:
+                    msg.name = request.user.get_full_name() or request.user.username
+                if not msg.email:
+                    msg.email = request.user.email or msg.email
+            msg.save()
+            messages.success(request, "Your message has been received. An admin will review it shortly.")
+            return redirect("contact_us")  # PRG pattern
+        messages.error(request, "Please correct the errors below and resubmit.")
+    else:
+        # Pre-fill for logged-in users
+        initial = {}
+        if request.user.is_authenticated:
+            initial["name"] = request.user.get_full_name() or request.user.username
+            initial["email"] = request.user.email
+        form = ContactForm(initial=initial)
+
+    return render(request, "contact_us.html", {"form": form})
 
 
 # -----------------------------
@@ -48,9 +60,8 @@ def contact_us(request):
 # -----------------------------
 def _ensure_profile(user) -> Profile:
     """
-    Guarantee the user has a Profile. If missing (e.g., account created
-    before the signal existed), create one with a default role (kept as
-    'student' for compatibility).
+    Ensure the user has a Profile.
+    If missing, create one with the default role 'student'.
     """
     profile, _ = Profile.objects.get_or_create(
         user=user,
@@ -60,7 +71,11 @@ def _ensure_profile(user) -> Profile:
 
 
 def is_admin(user):
-    """Admin = staff/superuser or profile.role == 'admin' (optional)."""
+    """
+    Check if a user is an admin:
+    - Staff or superuser
+    - OR profile.role == 'admin'
+    """
     if not getattr(user, "is_authenticated", False):
         return False
     if user.is_staff or user.is_superuser:
@@ -71,25 +86,23 @@ def is_admin(user):
         return False
 
 
-    def login_redirect_by_role(user) -> str:
-        """
-        After login:
-        - Admins -> admin dashboard
-        - Others -> home
-        """
-        _ensure_profile(user)  # keep ensuring profile exists
-        return "admin_dashboard" if is_admin(user) else "home"
+def login_redirect_by_role(user) -> str:
+    """
+    Redirect users based on role after login:
+    - Admin → admin dashboard
+    - Others → home
+    """
+    _ensure_profile(user)  # ensure profile exists
+    return "admin_dashboard" if is_admin(user) else "home"
 
 
 # -----------------------------
-# Post-login router
+# Post-login redirect
 # -----------------------------
 @login_required
 def post_login_redirect(request):
-    """
-    Users land here after login (LOGIN_REDIRECT_URL = 'post_login_redirect').
-    """
-    list(messages.get_messages(request))
+    """Redirect user after login based on their role."""
+    list(messages.get_messages(request))  # clear any messages
     return redirect(login_redirect_by_role(request.user))
 
 
@@ -100,32 +113,21 @@ def post_login_redirect(request):
 @user_passes_test(is_admin, login_url="home")
 def admin_dashboard(request):
     """
-    Admin-only dashboard.
-
-    Active courses (no 'is_active' field on Course):
-      - within date range [start_date, end_date], OR
-      - has at least one booking (any time)
-
-    Also shows:
-      - courses that ever had a booking (with counts)
-      - previous bookings (latest 50)
-      - overview stats
+    Admin dashboard showing:
+    - Active courses
+    - Booked courses
+    - Previous bookings
+    - Stats
     """
     today = timezone.now().date()
 
     # Courses that have any booking (all time)
-    booked_course_ids = (
-        Booking.objects.values_list("course_id", flat=True).distinct()
-    )
+    booked_course_ids = Booking.objects.values_list("course_id", flat=True).distinct()
 
-    # Active = has bookings OR is currently within dates
-    active_filters = (
-        Q(id__in=booked_course_ids)
-        | Q(start_date__lte=today, end_date__gte=today)
-    )
+    # Active = has bookings OR is within date range
+    active_filters = Q(id__in=booked_course_ids) | Q(start_date__lte=today, end_date__gte=today)
 
-    # Use related_name 'bookings' (present in your model according to the
-    # error field list)
+    # Active courses with booking counts
     active_courses = (
         Course.objects.filter(active_filters)
         .annotate(total_bookings=Count("bookings"))
@@ -133,14 +135,14 @@ def admin_dashboard(request):
         .order_by("title")
     )
 
-    # All-time booked courses (+ counts)
+    # All-time booked courses with counts
     booked_courses = (
         Course.objects.filter(id__in=booked_course_ids)
         .annotate(total_bookings=Count("bookings"))
         .order_by("-id")
     )
 
-    # Previous bookings (latest first) — prefer created_at; fallback to id
+    # Last 50 bookings (prefer created_at)
     try:
         previous_bookings = (
             Booking.objects.select_related("course", "user")
@@ -155,8 +157,6 @@ def admin_dashboard(request):
     # Overview stats
     total_courses = Course.objects.count()
     total_bookings = Booking.objects.count()
-    # If Booking uses a different date field for scheduled time, change
-    # 'date' below
     try:
         upcoming_bookings = Booking.objects.filter(date__gte=today).count()
     except Exception:
@@ -180,29 +180,24 @@ def admin_dashboard(request):
 @login_required
 def book_tutor(request):
     """
-    Booking page (GET shows form; POST creates a booking).
-    Uses BookingForm (course, name, email, date, time, message).
+    Book a tutor:
+    - GET → show form with email pre-filled if logged in
+    - POST → save booking
     """
     if request.method == "POST":
         form = BookingForm(request.POST, user=request.user)
         if form.is_valid():
             booking = form.save(commit=False)
             booking.user = request.user
-            # name is set inside BookingForm.save() for authenticated users;
-            # email is required by the form; just save the instance now.
             booking.save()
-            messages.success(
-                request,
-                "🎉 Booking submitted successfully!",
-            )
+            messages.success(request, "🎉 Booking submitted successfully!")
             return redirect("my_bookings")
         messages.error(request, "Please correct the errors below.")
     else:
         initial = {}
-            # Pre-fill email from the logged-in account for convenience; still required.
-            if getattr(request.user, "email", ""):
-                initial["email"] = request.user.email
-            form = BookingForm(user=request.user, initial=initial)
+        if getattr(request.user, "email", ""):
+            initial["email"] = request.user.email
+        form = BookingForm(user=request.user, initial=initial)
 
     courses = Course.objects.all().order_by("title")
     return render(request, "booking.html", {"form": form, "courses": courses})
@@ -210,13 +205,13 @@ def book_tutor(request):
 
 @login_required
 def get_tutor(request):
-    # If tutors are no longer used, you can safely remove this view
-    # and its URL/template.
+    """Page for tutor info (unused if tutors are removed)."""
     return render(request, "tutor.html")
 
 
 @login_required
 def my_bookings_view(request):
+    """Show user's bookings."""
     bookings = (
         Booking.objects.filter(user=request.user)
         .select_related("course")
@@ -227,6 +222,7 @@ def my_bookings_view(request):
 
 @login_required
 def edit_booking_view(request, booking_id):
+    """Edit a booking."""
     booking = get_object_or_404(Booking, id=booking_id, user=request.user)
     if request.method == "POST":
         form = BookingForm(request.POST, instance=booking, user=request.user)
@@ -237,15 +233,12 @@ def edit_booking_view(request, booking_id):
         messages.error(request, "Please fix the errors below.")
     else:
         form = BookingForm(instance=booking, user=request.user)
-    return render(
-        request,
-        "edit_booking.html",
-        {"form": form, "booking": booking},
-    )
+    return render(request, "edit_booking.html", {"form": form, "booking": booking})
 
 
 @login_required
 def delete_booking_view(request, booking_id):
+    """Delete a booking."""
     booking = get_object_or_404(Booking, id=booking_id, user=request.user)
     if request.method == "POST":
         booking.delete()
@@ -254,31 +247,23 @@ def delete_booking_view(request, booking_id):
     return render(request, "delete_booking.html", {"booking": booking})
 
 
-# admin-only password reset view
+# -----------------------------
+# Admin-only password reset
+# -----------------------------
 @require_http_methods(["GET", "POST"])
 def admin_only_password_reset(request):
     """
-    Replaces allauth's email-based reset. No email is sent. Shows instructions
-    to contact the administrator, and on POST returns to the login page with
-    an info message.
+    Disable allauth's email reset and show admin contact instead.
     """
     if request.method == "POST":
         messages.info(
             request,
-            (
-                "Password reset is handled by an administrator. "
-                "Please contact us for assistance."
-            ),
+            "Password reset is handled by an administrator. Please contact us for assistance.",
         )
         return redirect("account_login")
 
-    # Use your real contact details here
     context = {
         "contact_email": "info@learnlang.com",
         "contact_phone": "0049 123456",
     }
-    return render(
-        request,
-        "account/password_reset_disabled.html",
-        context,
-    )
+    return render(request, "account/password_reset_disabled.html", context)

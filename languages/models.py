@@ -90,9 +90,9 @@ class Booking(models.Model):
         related_name="bookings",
     )
 
-# Mandatory: set 'name' from logged-in user in the form/save flow
-    name = models.CharField(max_length=100) 
-# Mandatory: required in form and at the model level
+    # Mandatory: set 'name' from logged-in user in the form/save flow
+    name = models.CharField(max_length=100)
+    # Mandatory: required in form and at the model level
     email = models.EmailField()
 
     message = models.TextField(blank=True, null=True)
@@ -149,17 +149,24 @@ def create_profile(sender, instance, created, **kwargs):
             defaults={"role": "student"},
         )
 
-# Contact / Support inbox
-    class ContactMessage(models.Model):
-        """Contact-us submissions visible in Django Admin."""
-        name = models.CharField(max_length=255)
-        email = models.EmailField()
-        subject = models.CharField(max_length=255)
-        message = models.TextField()
-        created_at = models.DateTimeField(auto_now_add=True)
-    
-        class Meta:
-            ordering = ("-created_at",)
-    
-        def __str__(self) -> str:
-            return f"{self.name} — {self.subject} ({self.created_at:%Y-%m-%d})"
+
+class ContactMessage(models.Model):
+    """Model to store contact form submissions."""
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="contact_messages"
+    )
+    name = models.CharField(max_length=255)
+    email = models.EmailField()
+    subject = models.CharField(max_length=255, blank=True)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"Message from {self.name} ({self.email})"
