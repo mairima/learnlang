@@ -35,3 +35,6 @@ tests/
 .coverage
 coverage.xml
 htmlcov/
+
+# Ignore only this unit test
+languages/tests/test_unit.py
