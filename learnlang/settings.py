@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 import dj_database_url
 
 # -----------------------------------------------------------------------------
-# Load .env early if present
+# Load .env early if present (local dev)
 # -----------------------------------------------------------------------------
 if os.path.exists(".env"):
     try:
@@ -30,28 +30,39 @@ TEMPLATES_DIR = os.path.join(BASE_DIR, "languages", "templates")
 # -----------------------------------------------------------------------------
 SECRET_KEY = os.getenv("SECRET_KEY", "CHANGE-ME-UNSAFE")
 
-# Default to False for safety
+# Default to False for safety (prod on Heroku)
 DEBUG = str(os.getenv("DEBUG", "False")).lower() == "true"
 
-ALLOWED_HOSTS = [
-    "127.0.0.1",
-    "localhost",
-    "learnlang-e0549c82066a.herokuapp.com",
-]
+# Helper to normalize host values (strip scheme/path)
+def _clean_host(h: str) -> str:
+    h = h.replace("https://", "").replace("http://", "")
+    return h.split("/")[0].strip()
 
+# Base local hosts
+ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+
+# Add env-driven hosts (comma or space separated)
+_env_hosts = os.getenv("ALLOWED_HOSTS", "")
+if _env_hosts:
+    for token in _env_hosts.replace(" ", ",").split(","):
+        token = token.strip()
+        if token:
+            host = _clean_host(token)
+            if host and host not in ALLOWED_HOSTS:
+                ALLOWED_HOSTS.append(host)
+
+# CSRF trusted origins: local + env-driven (scheme depends on env)
 CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:8000",
     "http://127.0.0.1:8001",
     "http://localhost:8000",
     "http://localhost:8001",
 ]
-
-host = os.getenv("ALLOWED_HOSTS")
-if host:
-    ALLOWED_HOSTS.append(host)
-    is_local = os.getenv("IS_LOCAL", "").lower() == "true"
-    scheme = "https" if (not DEBUG and not is_local) else "http"
-    CSRF_TRUSTED_ORIGINS.append(f"{scheme}://{host}")
+IS_LOCAL = str(os.getenv("IS_LOCAL", "")).lower() == "true"
+_scheme = "https" if (not DEBUG and not IS_LOCAL) else "http"
+for host in ALLOWED_HOSTS:
+    if host not in {"127.0.0.1", "localhost"}:
+        CSRF_TRUSTED_ORIGINS.append(f"{_scheme}://{host}")
 
 # -----------------------------------------------------------------------------
 # Apps
@@ -107,7 +118,7 @@ TEMPLATES = [
 WSGI_APPLICATION = "learnlang.wsgi.application"
 
 # -----------------------------------------------------------------------------
-# Database (SQLite for dev/test; Postgres in prod via DATABASE_URL)
+# Database (SQLite for dev; Postgres in prod via DATABASE_URL)
 # -----------------------------------------------------------------------------
 if os.getenv("DATABASE_URL"):
     DATABASES = {
@@ -158,7 +169,7 @@ USE_I18N = True
 USE_TZ = True
 
 # -----------------------------------------------------------------------------
-# Static & Media
+# Static files (WhiteNoise)
 # -----------------------------------------------------------------------------
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
@@ -195,19 +206,19 @@ ACCOUNT_LOGOUT_ON_GET = True
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = "http" if DEBUG else "https"
 
 # -----------------------------------------------------------------------------
-# Security / HTTPS behavior
+# Security (production hardening)
 # -----------------------------------------------------------------------------
-IS_LOCAL = os.getenv("IS_LOCAL", "").lower() == "true"
-
 if not DEBUG and not IS_LOCAL:
     SECURE_SSL_REDIRECT = True
     SECURE_HSTS_SECONDS = 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = False
     SECURE_HSTS_PRELOAD = False
     SECURE_CONTENT_TYPE_NOSNIFF = True
-    X_FRAME_OPTIONS = "DENY"
     USE_X_FORWARDED_HOST = True
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    X_FRAME_OPTIONS = "DENY"
 else:
     SECURE_SSL_REDIRECT = False
     SECURE_HSTS_SECONDS = 0
