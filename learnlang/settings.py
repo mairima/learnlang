@@ -13,7 +13,6 @@ import dj_database_url
 # Load .env early if present
 # -----------------------------------------------------------------------------
 if os.path.exists(".env"):
-    # Optional module some templates use; safe to import if you have it
     try:
         import env  # noqa: F401
     except Exception:
@@ -31,43 +30,42 @@ TEMPLATES_DIR = os.path.join(BASE_DIR, "languages", "templates")
 # -----------------------------------------------------------------------------
 SECRET_KEY = os.getenv("SECRET_KEY", "CHANGE-ME-UNSAFE")
 
-# DEBUG from env (defaults to True for local dev)
-DEBUG = str(os.getenv("DEBUG", "True")).lower() == "true"
+# Default to False for safety
+DEBUG = str(os.getenv("DEBUG", "False")).lower() == "true"
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost", "https://learnlang-e0549c82066a.herokuapp.com"]
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "localhost",
+    "learnlang-e0549c82066a.herokuapp.com",
+]
+
 CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:8000",
-    "http://127.0.0.1:8001",   # added
+    "http://127.0.0.1:8001",
     "http://localhost:8000",
-    "http://localhost:8001",   # added
+    "http://localhost:8001",
 ]
 
 host = os.getenv("ALLOWED_HOSTS")
 if host:
     ALLOWED_HOSTS.append(host)
-    # Use HTTP for local/dev to avoid HTTPS/HSTS problems; HTTPS only in real prod
-    IS_LOCAL = os.getenv("IS_LOCAL", "").lower() == "true"
-    scheme = "https" if (not DEBUG and not IS_LOCAL) else "http"
+    is_local = os.getenv("IS_LOCAL", "").lower() == "true"
+    scheme = "https" if (not DEBUG and not is_local) else "http"
     CSRF_TRUSTED_ORIGINS.append(f"{scheme}://{host}")
 
 # -----------------------------------------------------------------------------
 # Apps
 # -----------------------------------------------------------------------------
 INSTALLED_APPS = [
-    # Django
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "django.contrib.sites",  # required by allauth
-
-    # Third-party
+    "django.contrib.sites",
     "allauth",
     "allauth.account",
-
-    # Local apps
     "languages",
 ]
 
@@ -78,7 +76,7 @@ AUTHENTICATION_BACKENDS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",  # per WhiteNoise docs
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -165,18 +163,17 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-# Optional local static dir
 STATIC_DIR = BASE_DIR / "static"
 STATICFILES_DIRS = [STATIC_DIR] if STATIC_DIR.exists() else []
 
-# New-style STORAGES (Django 4.2+)
 STORAGES = {
     "default": {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
     "staticfiles": {
-        # WhiteNoise manifest pipeline for production
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        "BACKEND": (
+            "whitenoise.storage.CompressedManifestStaticFilesStorage"
+        ),
     },
 }
 
@@ -187,29 +184,22 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 SITE_ID = 1
 
 LOGIN_URL = "account_login"
-# Your view is named post_login_redirect, so point to it:
 LOGIN_REDIRECT_URL = "post_login_redirect"
 LOGOUT_REDIRECT_URL = "account_login"
 
-# Minimal, username-only auth (no email verification)
 ACCOUNT_EMAIL_REQUIRED = False
 ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = "username"
 ACCOUNT_EMAIL_VERIFICATION = "none"
-# Allow GET logout for simple navbar link (optional)
 ACCOUNT_LOGOUT_ON_GET = True
-
-# Generate http links locally (avoids https redirects in dev)
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = "http" if DEBUG else "https"
 
 # -----------------------------------------------------------------------------
 # Security / HTTPS behavior
 # -----------------------------------------------------------------------------
-# after DEBUG is computed
 IS_LOCAL = os.getenv("IS_LOCAL", "").lower() == "true"
 
 if not DEBUG and not IS_LOCAL:
-    # Production hardening
     SECURE_SSL_REDIRECT = True
     SECURE_HSTS_SECONDS = 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = False
@@ -219,7 +209,6 @@ if not DEBUG and not IS_LOCAL:
     USE_X_FORWARDED_HOST = True
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 else:
-    # Local dev/test: keep everything HTTP
     SECURE_SSL_REDIRECT = False
     SECURE_HSTS_SECONDS = 0
     SESSION_COOKIE_SECURE = False
@@ -228,7 +217,9 @@ else:
 # -----------------------------------------------------------------------------
 # Messages / Logging
 # -----------------------------------------------------------------------------
-MESSAGE_STORAGE = "django.contrib.messages.storage.session.SessionStorage"
+MESSAGE_STORAGE = (
+    "django.contrib.messages.storage.session.SessionStorage"
+)
 
 LOGGING = {
     "version": 1,
@@ -251,19 +242,12 @@ LOGGING = {
 
 # -----------------------------------------------------------------------------
 # Test-only overrides
-# Use simple staticfiles storage during tests so collectstatic/manifest not needed
 # -----------------------------------------------------------------------------
 if "test" in sys.argv:
     STORAGES["staticfiles"]["BACKEND"] = (
         "django.contrib.staticfiles.storage.StaticFilesStorage"
     )
-    # Make tests behave like local dev
     DEBUG = True
     SECURE_SSL_REDIRECT = False
     SESSION_COOKIE_SECURE = False
     CSRF_COOKIE_SECURE = False
-
-# -----------------------------------------------------------------------------
-# Only for testing/demo: allow embedding (turn off in real prod)
-# -----------------------------------------------------------------------------
-X_FRAME_OPTIONS = "ALLOWALL"

@@ -26,19 +26,22 @@ urlpatterns = [
 
     # Post-login & admin
     path("after-login/", views.post_login_redirect, name="after_login"),
-    #alias
-    path("after-login/", views.post_login_redirect, name="post_login_redirect"),
-    path(
-        "admin-dashboard/",
-        views.admin_dashboard,
-        name="admin_dashboard",
+    path(  # alias
+        "after-login/",
+        views.post_login_redirect,
+        name="post_login_redirect",
     ),
     path("admin-dashboard/", views.admin_dashboard, name="admin_dashboard"),
-    # alias
-    path("admin-dashboard/", views.admin_dashboard, name="tutor_dashboard"),
-    # alias
-    path("admin-dashboard/", views.admin_dashboard, name="student_dashboard"),
-
+    path(  # alias
+        "admin-dashboard/",
+        views.admin_dashboard,
+        name="tutor_dashboard",
+    ),
+    path(  # alias
+        "admin-dashboard/",
+        views.admin_dashboard,
+        name="student_dashboard",
+    ),
 
     # Password reset placeholder
     path(

@@ -1,12 +1,21 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import (
+    login_required,
+    user_passes_test,
+)
 from django.utils import timezone
 from django.db.models import Count, Q
 from django.views.decorators.http import require_http_methods
 
-from .models import Booking, Course, Profile, ContactMessage
+from .models import (
+    Booking,
+    Course,
+    Profile,
+    ContactMessage,  # noqa: F401 (used via ContactForm save)
+)
 from .forms import BookingForm, ContactForm
+
 
 # -----------------------------
 # Home & simple content pages
@@ -37,18 +46,32 @@ def contact_us(request):
             if request.user.is_authenticated:
                 msg.user = request.user
                 if not msg.name:
-                    msg.name = request.user.get_full_name() or request.user.username
+                    msg.name = (
+                        request.user.get_full_name()
+                        or request.user.username
+                    )
                 if not msg.email:
                     msg.email = request.user.email or msg.email
             msg.save()
-            messages.success(request, "Your message has been received. An admin will review it shortly.")
+            messages.success(
+                request,
+                (
+                    "Your message has been received. "
+                    "An admin will review it shortly."
+                ),
+            )
             return redirect("contact_us")  # PRG pattern
-        messages.error(request, "Please correct the errors below and resubmit.")
+        messages.error(
+            request,
+            "Please correct the errors below and resubmit.",
+        )
     else:
         # Pre-fill for logged-in users
         initial = {}
         if request.user.is_authenticated:
-            initial["name"] = request.user.get_full_name() or request.user.username
+            initial["name"] = (
+                request.user.get_full_name() or request.user.username
+            )
             initial["email"] = request.user.email
         form = ContactForm(initial=initial)
 
@@ -122,10 +145,15 @@ def admin_dashboard(request):
     today = timezone.now().date()
 
     # Courses that have any booking (all time)
-    booked_course_ids = Booking.objects.values_list("course_id", flat=True).distinct()
+    booked_course_ids = (
+        Booking.objects.values_list("course_id", flat=True).distinct()
+    )
 
     # Active = has bookings OR is within date range
-    active_filters = Q(id__in=booked_course_ids) | Q(start_date__lte=today, end_date__gte=today)
+    active_filters = (
+        Q(id__in=booked_course_ids)
+        | Q(start_date__lte=today, end_date__gte=today)
+    )
 
     # Active courses with booking counts
     active_courses = (
@@ -158,7 +186,9 @@ def admin_dashboard(request):
     total_courses = Course.objects.count()
     total_bookings = Booking.objects.count()
     try:
-        upcoming_bookings = Booking.objects.filter(date__gte=today).count()
+        upcoming_bookings = Booking.objects.filter(
+            date__gte=today
+        ).count()
     except Exception:
         upcoming_bookings = None
 
@@ -187,28 +217,37 @@ def book_tutor(request):
     if request.method == "POST":
         form = BookingForm(request.POST, user=request.user)
 
-        # If email is missing, add a field error and re-render (do not redirect).
+        # If email is missing, add a field error and re-render (no redirect).
         email_value = (request.POST.get("email") or "").strip()
         if not email_value:
             form.add_error("email", "This field is required.")
             messages.error(request, "Please correct the errors below.")
             courses = Course.objects.all().order_by("title")
-            return render(request, "booking.html", {"form": form, "courses": courses})
+            return render(
+                request,
+                "booking.html",
+                {"form": form, "courses": courses},
+            )
 
         # Otherwise validate normally
         if form.is_valid():
             booking = form.save(commit=False)
             booking.user = request.user
             booking.save()
-            messages.success(request, "🎉 Booking submitted successfully!")
+            messages.success(
+                request,
+                "🎉 Booking submitted successfully!",
+            )
             return redirect("my_bookings")
 
         messages.error(request, "Please correct the errors below.")
     else:
-        # Prefill both name & email for logged-in users (test expects name)
+        # Prefill name & email for logged-in users (tests expect name)
         initial = {}
         if request.user.is_authenticated:
-            initial["name"] = request.user.get_full_name() or request.user.username
+            initial["name"] = (
+                request.user.get_full_name() or request.user.username
+            )
             if getattr(request.user, "email", ""):
                 initial["email"] = request.user.email
         form = BookingForm(user=request.user, initial=initial)
@@ -239,7 +278,9 @@ def edit_booking_view(request, booking_id):
     """Edit a booking."""
     booking = get_object_or_404(Booking, id=booking_id, user=request.user)
     if request.method == "POST":
-        form = BookingForm(request.POST, instance=booking, user=request.user)
+        form = BookingForm(
+            request.POST, instance=booking, user=request.user
+        )
         if form.is_valid():
             form.save()
             messages.success(request, "Booking updated.")
@@ -247,7 +288,9 @@ def edit_booking_view(request, booking_id):
         messages.error(request, "Please fix the errors below.")
     else:
         form = BookingForm(instance=booking, user=request.user)
-    return render(request, "edit_booking.html", {"form": form, "booking": booking})
+    return render(
+        request, "edit_booking.html", {"form": form, "booking": booking}
+    )
 
 
 @login_required
@@ -272,7 +315,10 @@ def admin_only_password_reset(request):
     if request.method == "POST":
         messages.info(
             request,
-            "Password reset is handled by an administrator. Please contact us for assistance.",
+            (
+                "Password reset is handled by an administrator. "
+                "Please contact us for assistance."
+            ),
         )
         return redirect("account_login")
 
@@ -280,4 +326,6 @@ def admin_only_password_reset(request):
         "contact_email": "info@learnlang.com",
         "contact_phone": "0049 123456",
     }
-    return render(request, "account/password_reset_disabled.html", context)
+    return render(
+        request, "account/password_reset_disabled.html", context
+    )

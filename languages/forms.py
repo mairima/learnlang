@@ -1,33 +1,34 @@
 # languages/forms.py
 from django import forms
 from django.core.exceptions import ValidationError
-from django.contrib.auth import get_user_model
-from allauth.account.forms import SignupForm as AllauthSignupForm  # ok to keep; remove if unused
 
-from .models import Booking, Profile, Course, ContactMessage
-
-User = get_user_model()
+from .models import Booking, Course, ContactMessage
 
 
 def _display_name_for(user):
     """Pick a nice display name from the logged-in user."""
-    full = f"{getattr(user, 'first_name', '')} {getattr(user, 'last_name', '')}".strip()
+    first = getattr(user, "first_name", "") or ""
+    last = getattr(user, "last_name", "") or ""
+    full = (first + " " + last).strip()
     if full:
         return full
-    prof = getattr(user, "profile", None)
-    # If you later add profile.display_name, prefer it here, e.g.:
+    # If you later add profile.display_name, prefer it here.
+    # prof = getattr(user, "profile", None)
     # if prof and getattr(prof, "display_name", ""):
     #     return prof.display_name
-    return getattr(user, "username", None) or getattr(user, "email", "")
+    username = getattr(user, "username", None)
+    email = getattr(user, "email", "")
+    return username or email
 
 
 class BookingForm(forms.ModelForm):
     """
     Booking form for Booking model (no date/time fields).
     - Orders course dropdown by start_date then title
-    - Validates: a user can't book the same course twice
+    - Validates: a user cannot book the same course twice
     - For authenticated users: show name prefilled (not hidden)
     """
+
     class Meta:
         model = Booking
         fields = ["course", "name", "email", "message"]
@@ -48,7 +49,7 @@ class BookingForm(forms.ModelForm):
                 attrs={
                     "class": "form-control",
                     "rows": 3,
-                    "placeholder": "Anything you'd like to add?",
+                    "placeholder": "Anything you would like to add?",
                 }
             ),
         }
@@ -57,14 +58,16 @@ class BookingForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.user = user  # set by the view
 
-        # Populate & order the course select
-        self.fields["course"].queryset = Course.objects.order_by("start_date", "title")
+        # Populate and order the course select
+        self.fields["course"].queryset = Course.objects.order_by(
+            "start_date", "title"
+        )
         self.fields["course"].widget.attrs.update({"class": "form-select"})
 
         # Email is mandatory for everyone
         self.fields["email"].required = True
 
-        # If a user is logged in, prefill name and email (do not hide the name field)
+        # If logged in, prefill (do not hide the name field)
         if self.user and getattr(self.user, "is_authenticated", False):
             display_name = _display_name_for(self.user)
             if display_name and "name" not in self.initial:
@@ -76,7 +79,7 @@ class BookingForm(forms.ModelForm):
         cleaned = super().clean()
         course = cleaned.get("course")
 
-        # Duplicate booking check (only if logged in and a course selected)
+        # Duplicate booking check (only if logged in and course selected)
         if self.user and course:
             qs = Booking.objects.filter(user=self.user, course=course)
             if self.instance and self.instance.pk:
@@ -86,7 +89,7 @@ class BookingForm(forms.ModelForm):
         return cleaned
 
     def save(self, commit=True):
-        """Ensure 'name' is set from logged-in user; email remains required."""
+        """Ensure 'name' is set from logged-in user; email stays required."""
         booking = super().save(commit=False)
         if self.user and getattr(self.user, "is_authenticated", False):
             # Persist authoritative account name regardless of form edits
@@ -97,13 +100,35 @@ class BookingForm(forms.ModelForm):
 
 
 class ContactForm(forms.ModelForm):
-    """Minimal contact form that saves to ContactMessage so admins can read it."""
+    """Minimal contact form that saves to ContactMessage for admins."""
+
     class Meta:
         model = ContactMessage
         fields = ["name", "email", "subject", "message"]
         widgets = {
-            "name": forms.TextInput(attrs={"class": "form-control", "placeholder": "Your name"}),
-            "email": forms.EmailInput(attrs={"class": "form-control", "placeholder": "you@example.com"}),
-            "subject": forms.TextInput(attrs={"class": "form-control", "placeholder": "Subject"}),
-            "message": forms.Textarea(attrs={"class": "form-control", "rows": 5, "placeholder": "How can we help?"}),
+            "name": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Your name",
+                }
+            ),
+            "email": forms.EmailInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "you@example.com",
+                }
+            ),
+            "subject": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Subject",
+                }
+            ),
+            "message": forms.Textarea(
+                attrs={
+                    "class": "form-control",
+                    "rows": 5,
+                    "placeholder": "How can we help?",
+                }
+            ),
         }

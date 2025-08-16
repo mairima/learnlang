@@ -1,9 +1,11 @@
 # languages/test_booking_happy_path.py
 from datetime import date, timedelta
+
+from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
-from django.contrib.auth import get_user_model
-from languages.models import Course, Booking
+
+from languages.models import Booking, Course
 
 User = get_user_model()
 
@@ -31,7 +33,7 @@ class BookingHappyPathTests(TestCase):
         resp_get = self.client.get(reverse("book_tutor"))
         self.assertEqual(resp_get.status_code, 200)
 
-        # Valid POST – includes email so it should succeed
+        # Valid POST - includes email so it should succeed
         payload = {
             "name": "Alice Tester",
             "email": "alice@example.com",
@@ -40,14 +42,17 @@ class BookingHappyPathTests(TestCase):
         }
         resp_post = self.client.post(reverse("book_tutor"), data=payload)
         self.assertEqual(resp_post.status_code, 302)
-        self.assertEqual(resp_post.headers.get("Location"), reverse("my_bookings"))
+        self.assertEqual(
+            resp_post.headers.get("Location"),
+            reverse("my_bookings"),
+        )
 
         # Booking exists and is linked to user & course
         qs = Booking.objects.filter(user=self.user, course=self.course)
         self.assertTrue(qs.exists(), "Booking record was not created")
-        b = qs.first()
-        self.assertEqual(b.name, payload["name"])
-        self.assertEqual(b.email, payload["email"])
+        bkg = qs.first()
+        self.assertEqual(bkg.name, payload["name"])
+        self.assertEqual(bkg.email, payload["email"])
 
         # My bookings loads
         resp_list = self.client.get(reverse("my_bookings"))

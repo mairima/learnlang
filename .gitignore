@@ -21,3 +21,6 @@ settings.json
 
 # Heroku
 *.orig
+
+# Unittest
+test_*.py
