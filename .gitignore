@@ -23,4 +23,15 @@ settings.json
 *.orig
 
 # Unittest
-test_*.py
+# --- Tests (Django/Python) ---
+tests/
+**/tests/**
+**/test_*.py
+**/*_test.py
+**/tests.py
+
+# pytest / coverage artifacts
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
