@@ -34,7 +34,7 @@ SECRET_KEY = os.getenv("SECRET_KEY", "CHANGE-ME-UNSAFE")
 # DEBUG from env (defaults to True for local dev)
 DEBUG = str(os.getenv("DEBUG", "True")).lower() == "true"
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", "https://learnlang-e0549c82066a.herokuapp.com"]
 CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:8000",
     "http://127.0.0.1:8001",   # added
